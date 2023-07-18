@@ -1,0 +1,41 @@
+@model AdminBlog.Models.Blog
+
+<form id="form" enctype="multipart/form-data" method="POST" asp-action="Add" asp-controller="Blog">
+    <div class="form-group">
+        <input type="text" class="form-control" id="Title" name="Title" placeholder="Başlık">
+        @*<span asp-validation-for="Title" class="text-danger"></span>*@
+    </div>
+    <div class="form-group">
+        <input type="text" class="form-control" id="Subtitle" name="Subtitle" placeholder="Alt Başlık">
+    </div>
+    <textarea id="Summernote" name="Content"></textarea><br />
+
+    <label asp-for="CoverFoto"></label>
+    <div class="form-group">
+        <input type="file" id="file" class="form-control" name="CoverFoto">
+    </div>
+    <div class="form-group">
+
+
+        @Html.DropDownListFor(m => m.CategoryId, (List<SelectListItem>)ViewBag.values , "Bir Kategori Seciniz ..." ,new {@id = "CategoryId", @class = "form-control"})
+    </div> @* m => m.Category.Id - m.Category.Id ile yerine gelecek olan değeri veriyoruz. m model'dir.  *@
+
+
+
+    <br />
+    <div class="btn-group-toggle">
+        <button id="saveBtn" type="submit" class="btn btn-primary">Kaydet</button>
+    </div>
+</form>
+
+@section Scripts{
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.16/dist/summernote.min.js"></script>
+    <script>
+
+        $(document).ready(function () {
+            $('#Summernote').summernote();
+        });
+
+
+    </script>
+}
