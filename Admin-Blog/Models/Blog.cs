@@ -19,7 +19,7 @@ namespace AdminBlog.Models
         public DateTime CreateTime { get; set; }=DateTime.Now;
         public Author Author { get; set; }
         public int AuthorId { get; set; }
-        //public Category Category { get; set; } // blog eklemede hata verdigi icin sildim.
+        public Category Category { get; set; } // blog eklemede hata verdigi icin sildim.
 
         [Display(Name ="Yuklemek İstediginiz Fotografi Seciniz")]
         [NotMapped]

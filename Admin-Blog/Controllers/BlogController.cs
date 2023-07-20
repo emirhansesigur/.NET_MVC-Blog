@@ -42,10 +42,11 @@ namespace AdminBlog.Controllers
             return View(list);
         }
 
-        public IActionResult Publish(int Id)
+        public IActionResult Publish(int Id) // yayinlama islemini tersine cevirir.
         {
             var blog = _context.Blog.Find(Id);
-            blog.IsPublish = true;
+
+            blog.IsPublish = !(blog.IsPublish);
             _context.Update(blog);
             _context.SaveChanges();
             return RedirectToAction(nameof(Index));
@@ -66,7 +67,7 @@ namespace AdminBlog.Controllers
 
         [HttpPost]
         //public IActionResult Add(Blog model) 
-        public async Task<IActionResult> Add(Blog model) // Category.Id elimizde. // Title, Subtitle, CoverFoto, 
+        public async Task<IActionResult> Add(Blog model) // Category.Id elimizde. 
         {
 
             //if (!ModelState.IsValid)

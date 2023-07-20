@@ -36,7 +36,7 @@ namespace AdminBlog.Controllers
             //_signInManager = signInManager;
             //_userManager = userManager;
         }
-        
+
         public IActionResult Index()
         {
             return View();
@@ -82,33 +82,42 @@ namespace AdminBlog.Controllers
 
                 HttpContext.Session.SetInt32("id", author.Id);
 
-                return RedirectToAction("Add","Blog");
+                return RedirectToAction("Add", "Blog");
             }
         }
 
 
 
-        public async Task<IActionResult> AddCategory(Category category)
+        public async Task<IActionResult> AddCategory(string Name)
         {
             var sql = "SELECT * FROM Category WHERE Name = @Name";
-            var count = _context.Category.FromSqlRaw(sql, new SqlParameter("@Name", category.Name)).ToList();
-
-            if (!ModelState.IsValid)
-            {
-                //return View(category);
-                return RedirectToAction(nameof(Category));
-            }
+            var count = _context.Category.FromSqlRaw(sql, new SqlParameter("@Name", Name)).ToList();
 
 
             if (count.Count() == 0) // yoksa aramak icin
             {
                 var sql2 = "INSERT INTO Category (Name) VALUES (@Name)";
-                var affectedRows = await _context.Database.ExecuteSqlRawAsync(sql2, new SqlParameter("@Name", category.Name));
+                var affectedRows = await _context.Database.ExecuteSqlRawAsync(sql2, new SqlParameter("@Name", Name));
+                return Json(true);
             }
             // varsa ekrana hata dondur.
 
-            return RedirectToAction(nameof(Category));
+            return Json(false);
+            //return RedirectToAction(nameof(Category));    
         }
+
+
+        //[Authorize]
+        public IActionResult Category()
+        {
+            var list = _context.Category.FromSqlRaw("SELECT * FROM Category").ToList();
+
+
+
+            return View(list);
+        }
+
+
 
         //public async Task<IActionResult> AddAuthor(Author author) // ayni email ile oldugu zaman kabul etme.
         //{
@@ -199,13 +208,6 @@ namespace AdminBlog.Controllers
             return Json(category);
         }
 
-        //[Authorize]
-        public IActionResult Category()
-        {
-            var list = _context.Category.FromSqlRaw("SELECT * FROM Category").ToList();
-            return View(list);
-        }
-
 
         //public IActionResult Author()
         //{
@@ -286,8 +288,8 @@ namespace AdminBlog.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        
-       
+
+
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

@@ -19,7 +19,7 @@
             <td>@item.Title</td>
             <td>
                 @if(item.IsPublish){
-                <a class="btn btn-success" >Yayınlandı</a>
+                        <a class="btn btn-success" asp-route-id="@item.Id" asp-action="Publish" >Yayınlandı</a>
 
                 }else{
                 <a class="btn btn-light" asp-route-id="@item.Id" asp-action="Publish">Yayınla</a>
