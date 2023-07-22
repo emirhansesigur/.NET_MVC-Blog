@@ -64,7 +64,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" onclick="clearForm()" data-dismiss="modal">KAPAT</button>
-                    <button type="submit" id="saveBtn" onclick="Save()" class="btn btn-primary">EKLE</button>
+                    <button type="button" id="saveBtn" onclick="Save()" class="btn btn-primary" data-dismiss="modal">EKLE</button>
                     <button type="submit" id="updateBtn" class="btn btn-primary">GUNCELLE</button>
                 </div>
             </form>
@@ -75,8 +75,8 @@
 
 @section Scripts{
     <script>
-        var updateCommentUrl = "@Url.Action("UpdateAuthor", "Home")";
-        var addCommentUrl = "@Url.Action("AddAuthor", "Home")";
+        
+
 
         $(clearForm())
         function updateForm(Id) {
@@ -96,11 +96,36 @@
             $('#Password, #Password2').hide();
         }
 
+        function Save() {
+
+
+
+            if () { }
+
+
+            $.ajax({
+                type: "POST",
+                dataType: 'json',
+                url: "@Url.Action("AddAuthor", "Home")",
+                data: {
+                    Id: $("#Id").val(),
+                    Name: $("#Name").val(),
+                    Surname: $("#Surname").val(),
+                    Email: $("#Email").val(),
+                    Password: $("#Password").val()
+                },
+                success: function (data) {
+
+                }
+            });
+        }
+
+
         $('#updateBtn').click(function () {
             $.ajax({
                 type: "POST",
                 dataType: 'json',
-                url: updateCommentUrl,
+                url: "@Url.Action("UpdateAuthor", "Home")",
                 cache: false,
                 data: {
                     Id: $("#Id").val(),
@@ -123,26 +148,7 @@
                 }
             });
         });
-        function Save () {
-            $.ajax({
-                type: "POST",
-                dataType: 'json',
-                url: addCommentUrl,
-                data: {
-                    Id: $("#Id").val(),
-                    Name: $("#Name").val(),
-                    Surname: $("#Surname").val(),
-                    Email: $("#Email").val(),
-                    Password: $("#Password").val()
-                },
-                success: function (data) {
-                    if (data.Redirect) {
-                        console.log("yazar mi??");
-                        window.location.replace(data.RedirectUrl);
-                    }
-                }
-            });
-        }
+        
         function addForm() {
             $('#Password, #Password2').show();
             $('#updateBtn').hide();

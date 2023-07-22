@@ -80,7 +80,7 @@ namespace AdminBlog.Controllers
             await _context.Database.ExecuteSqlRawAsync(sql, new SqlParameter("@Id", Id));
 
 
-            return RedirectToAction(nameof(Category));
+            return RedirectToAction(nameof(Index));
         } //ExecuteSqlRawAsync: Bu, _context.Database üzerinde yer alan bir metoddur ve verilen SQL ifadesini doğrudan veritabanında yürütür. 
           //@Id yerine geçerli Id değerini kullanmayı sağlar. Bu şekilde, SQL enjeksiyon saldırılarına karşı güvenli bir şekilde çalışmayı sağlar.
 
@@ -100,7 +100,7 @@ namespace AdminBlog.Controllers
             else // burada view e AYNISINDAN VAR mesajİ yazdir. 
             { }
 
-            return RedirectToAction(nameof(Category));
+            return RedirectToAction(nameof(Index));
         }
 
 

@@ -87,56 +87,6 @@ namespace AdminBlog.Controllers
         }
 
 
-
-        public async Task<IActionResult> AddCategory(string Name)
-        {
-            var sql = "SELECT * FROM Category WHERE Name = @Name";
-            var count = _context.Category.FromSqlRaw(sql, new SqlParameter("@Name", Name)).ToList();
-
-
-            if (count.Count() == 0) // yoksa aramak icin
-            {
-                var sql2 = "INSERT INTO Category (Name) VALUES (@Name)";
-                var affectedRows = await _context.Database.ExecuteSqlRawAsync(sql2, new SqlParameter("@Name", Name));
-                return Json(true);
-            }
-            // varsa ekrana hata dondur.
-
-            return Json(false);
-            //return RedirectToAction(nameof(Category));    
-        }
-
-
-        //[Authorize]
-        public IActionResult Category()
-        {
-            var list = _context.Category.FromSqlRaw("SELECT * FROM Category").ToList();
-
-
-
-            return View(list);
-        }
-
-
-
-        //public async Task<IActionResult> AddAuthor(Author author) // ayni email ile oldugu zaman kabul etme.
-        //{
-        //    // hash
-
-        //    var sql = "INSERT INTO Author VALUES (@Name, @Surname, @Email, @Password)";
-
-        //    var parameters = new List<SqlParameter>();
-        //    parameters.Add(new SqlParameter("@Name", author.Name));
-        //    parameters.Add(new SqlParameter("@Surname", author.Surname));
-        //    parameters.Add(new SqlParameter("@Email", author.Email));
-        //    parameters.Add(new SqlParameter("@Password", author.Password));
-        //    parameters.Add(new SqlParameter("@Id", author.Id));
-
-        //    await _context.Database.ExecuteSqlRawAsync(sql, parameters);
-        //    var list = _context.Author.FromSqlRaw("SELECT * FROM Author").ToList();
-        //    return View(list);
-        //}
-
         public async Task<IActionResult> AddAuthor(Author author)
         {
             // SHA-256 hash hesaplama
@@ -202,11 +152,6 @@ namespace AdminBlog.Controllers
         //}
 
 
-        public async Task<IActionResult> CategoryDetails(int Id) // bakilacak
-        {
-            var category = await _context.Category.FindAsync(Id);
-            return Json(category);
-        }
 
 
         //public IActionResult Author()
@@ -223,36 +168,7 @@ namespace AdminBlog.Controllers
         }
 
 
-
-        //<a class="btn btn-danger" asp-route-id="@item.Id" asp-action="DeleteCategory">Sil</a>
-        public async Task<IActionResult> DeleteCategory(int? Id)
-        {
-            var sql = "DELETE FROM Category WHERE Id = @Id";
-            await _context.Database.ExecuteSqlRawAsync(sql, new SqlParameter("@Id", Id));
-
-
-            return RedirectToAction(nameof(Category));
-        } //ExecuteSqlRawAsync: Bu, _context.Database üzerinde yer alan bir metoddur ve verilen SQL ifadesini doğrudan veritabanında yürütür. 
-          //@Id yerine geçerli Id değerini kullanmayı sağlar. Bu şekilde, SQL enjeksiyon saldırılarına karşı güvenli bir şekilde çalışmayı sağlar.
-
-        public async Task<IActionResult> UpdateCategory(int? Id, string Name) // burada kaldık
-        {
-            // eski kayıtlarla ile aynıysa güncelleME !!
-            var sql = "SELECT * FROM Category WHERE Name = @Name";
-            var count = _context.Category.FromSqlRaw(sql, new SqlParameter("@Name", Name)).ToList();
-
-
-            if (count.Count() == 0) // yoksa guncellemek icin
-            {
-                var sqll = "UPDATE Category SET Name = @Name WHERE Id = @Id";
-                await _context.Database.ExecuteSqlRawAsync(sqll, new SqlParameter("@Id", Id), new SqlParameter("@Name", Name));
-            }
-
-            else // burada view e AYNISINDAN VAR mesajİ yazdir. 
-            { }
-
-            return RedirectToAction(nameof(Category));
-        }
+        
 
         public async Task<IActionResult> UpdateAuthor(Author author) // burada kaldık
         {
