@@ -132,6 +132,8 @@
                     title: 'Hata!',
                     text: 'Lütfen isim alanları doldurunuz.',
                     confirmButtonText: 'Tamam'
+                }).then(function () {
+                    $('#CategoryModal').modal('show');
                 });
             }
 
@@ -144,7 +146,10 @@
                 success: function (data) {
                     console.log(data);
                     if (data) {
-                        Swal.fire('Category ekleme islemi basarili');
+                        Swal.fire('Category ekleme islemi basarili')
+                            .then(function () {
+                                location.reload();
+                            });
                     }
                     else {
                         swal.fire({
@@ -152,6 +157,8 @@
                             title: 'Hata!',
                             text: 'Aynı Category İsminden giris yaptiniz.',
                             confirmButtonText: 'Tamam'
+                        }).then(function () {
+                            $('#CategoryModal').modal('show');
                         });
                     }
                 }//,
@@ -168,18 +175,18 @@
             });
         }
 
-                                                 //$('#saveBtn').click(function () {
-                                                 //    $.ajax({
-                                                 //        type: "POST",
-                                                 //        dataType: 'json',
-                                                 //        url: "@Url.Action("AddCategory", "Category")",
-                                                 //        cache: false,
-                                                 //        data: {
-                                                 //            Id: $("#Id").val(),
-                                                 //            Name: $("#Name").val()
-                                                 //        }
-                                                 //    });
-                                                 //});
+                                                                                 //$('#saveBtn').click(function () {
+                                                                                 //    $.ajax({
+                                                                                 //        type: "POST",
+                                                                                 //        dataType: 'json',
+                                                                                 //        url: "@Url.Action("AddCategory", "Category")",
+                                                                                 //        cache: false,
+                                                                                 //        data: {
+                                                                                 //            Id: $("#Id").val(),
+                                                                                 //            Name: $("#Name").val()
+                                                                                 //        }
+                                                                                 //    });
+                                                                                 //});
 
     </script>
 }

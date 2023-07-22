@@ -74,9 +74,10 @@
 </div>
 
 @section Scripts{
-    <script>
-        
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
 
         $(clearForm())
         function updateForm(Id) {
@@ -97,27 +98,73 @@
         }
 
         function Save() {
+            var id = document.getElementById("Id").value;
+            var name = document.getElementById("Name").value;
+            var surname = document.getElementById("Surname").value;
+            var email = document.getElementById("Email").value;
+            var password = document.getElementById("Password").value;
 
+            var emailReg = /^([\w-\.]+@@([\w-]+\.)+[\w-]{2,4})?$/;
 
+            if (name == "" || surname == "" || email == "" || password == "") {
+                swal.fire({
+                    icon: 'error',
+                    title: 'Hata!',
+                    text: 'Lütfen boş alan bırakmayınız.',
+                    confirmButtonText: 'Tamam'
+                }).then(function () {
+                    $('#AuthorModal').modal('show');
+                });
+            }
+            else if (!emailReg.test(email)) {
+                swal.fire({
+                    icon: 'error',
+                    title: 'Hata!',
+                    text: 'Email hatası.',
+                    confirmButtonText: 'Tamam'
+                }).then(function () {
+                    $('#AuthorModal').modal('show');
+                });
+            }
 
-            if () { }
+            else {
+                $.ajax({
+                    type: "POST",
+                    dataType: 'json',
+                    url: "@Url.Action("AddAuthor", "Home")",
+                    data: {
+                        Id: id,
+                        Name: name,
+                        Surname: surname,
+                        Email: email,
+                        Password: password
+                    },
+                    success: function (data) {
+                        if (data) {
+                            swal.fire({
+                                icon: 'success',
+                                title: 'Basarili!',
+                                text: 'Kayıt işlemi başarılı..',
+                                confirmButtonText: 'Tamam'
+                            }).then(function () {
+                                location.reload();
+                            });
+                        }
+                        else{
+                            swal.fire({
+                                icon: 'error',
+                                title: 'Hata!',
+                                text: 'Bir hata olustu.',
+                                confirmButtonText: 'Tamam'
+                            }).then(function () {
+                                $('#AuthorModal').modal('show');
+                            });
+                        }
+                        }
+                    });
 
+            }
 
-            $.ajax({
-                type: "POST",
-                dataType: 'json',
-                url: "@Url.Action("AddAuthor", "Home")",
-                data: {
-                    Id: $("#Id").val(),
-                    Name: $("#Name").val(),
-                    Surname: $("#Surname").val(),
-                    Email: $("#Email").val(),
-                    Password: $("#Password").val()
-                },
-                success: function (data) {
-
-                }
-            });
         }
 
 
@@ -148,7 +195,7 @@
                 }
             });
         });
-        
+
         function addForm() {
             $('#Password, #Password2').show();
             $('#updateBtn').hide();

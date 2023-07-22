@@ -112,8 +112,8 @@ namespace AdminBlog.Controllers
                 parameters.Add(new SqlParameter("@Password", hashedPassword)); // Hashlenmiş parolayı kullan
 
                 await _context.Database.ExecuteSqlRawAsync(sql, parameters);
-                var list = _context.Author.FromSqlRaw("SELECT * FROM Author").ToList();
-                return View(list);
+
+                return Json(true);
             }
 
         }

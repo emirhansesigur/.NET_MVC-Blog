@@ -37,11 +37,11 @@ namespace AdminBlog.Controllers
         public async Task<IActionResult> AddCategory(Category category)
         {
 
-            if (!ModelState.IsValid)
-            {
-                //return View(category);
-                return RedirectToAction(nameof(Index));
-            }
+            //if (!ModelState.IsValid)
+            //{
+            //    //return View(category);
+            //    return RedirectToAction(nameof(Index));
+            //}
 
 
             var sql = "SELECT * FROM Category WHERE Name = @Name";
@@ -56,7 +56,7 @@ namespace AdminBlog.Controllers
             }
             // varsa ekrana hata dondur.
 
-            return RedirectToAction(nameof(Index));
+            return Json(true);
         }
 
         //[Authorize]
