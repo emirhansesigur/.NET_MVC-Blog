@@ -154,21 +154,21 @@ namespace AdminBlog.Controllers
 
 
 
-        //public IActionResult Author()
-        //{
-        //    List<Author> list = _context.Author.ToList();
-        //    return View(list);
-        //}
-
-        //[Authorize]
         public IActionResult Author()
         {
-            var list = _context.Author.FromSqlRaw("SELECT * FROM Author").ToList();
+            List<Author> list = _context.Author.OrderBy(a => a.Id).ToList();
             return View(list);
         }
 
+        ////[Authorize]
+        //public IActionResult Author()
+        //{
+        //    var list = _context.Author.FromSqlRaw("SELECT * FROM Author").ToList();
+        //    return View(list);
+        //}
 
-        
+
+
 
         public async Task<IActionResult> UpdateAuthor(Author author) // burada kaldık
         {
