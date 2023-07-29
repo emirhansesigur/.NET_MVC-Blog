@@ -89,7 +89,7 @@ namespace AdminBlog.Controllers
 			if (model.CoverFoto != null)
 			{
 				// category name ekleme
-				
+				model.IsPublish = false;
 
 				string folder = "/images/";
 				folder += model.CoverFoto.FileName + Guid.NewGuid().ToString();
@@ -108,32 +108,62 @@ namespace AdminBlog.Controllers
 			return Json(false);
 		}
 
-		//[HttpPost]
-		//public async Task<IActionResult> Add(Blog model)
-		//{ //C:\Users\Emir\Desktop\admin-blog-master
-		//    if (model != null){
-		//        if (Request.Form.Files.Count > 0) //en az bir dosya olduğundan emin olursunuz ve dosya işleme işlemine devam edebilirsiniz.
-		//        {
-		//            var file = Request.Form.Files.First(); //C:\Users\Emir\Desktop\admin-blog-master\wwwroot\images
-		//            string savePath = Path.Combine("C:", "Users", "Emir", "Desktop", "admin-blog-master", "wwwroot", "images");
-		//            var fileName = $"{DateTime.Now:MMddHHmmss}.{file.FileName.Split(".").Last()}";
-		//            var fileUrl = Path.Combine(savePath, fileName);
-		//            using (var fileStream = new FileStream(fileUrl, FileMode.Create))
-		//            {
-		//                await file.CopyToAsync(fileStream);
-		//            }
-		//            model.ImagePath = fileName;
-		//            model.AuthorId = (int)HttpContext.Session.GetInt32("id");
-		//            await _context.AddAsync(model);
-		//            await _context.SaveChangesAsync();
-		//            return Json(true);
-		//        }
-		//    }
+        //[HttpPost]
+        //public async Task<IActionResult> Add(Blog model)
+        //{ //C:\Users\Emir\Desktop\admin-blog-master
+        //    if (model != null){
+        //        if (Request.Form.Files.Count > 0) //en az bir dosya olduğundan emin olursunuz ve dosya işleme işlemine devam edebilirsiniz.
+        //        {
+        //            var file = Request.Form.Files.First(); //C:\Users\Emir\Desktop\admin-blog-master\wwwroot\images
+        //            string savePath = Path.Combine("C:", "Users", "Emir", "Desktop", "admin-blog-master", "wwwroot", "images");
+        //            var fileName = $"{DateTime.Now:MMddHHmmss}.{file.FileName.Split(".").Last()}";
+        //            var fileUrl = Path.Combine(savePath, fileName);
+        //            using (var fileStream = new FileStream(fileUrl, FileMode.Create))
+        //            {
+        //                await file.CopyToAsync(fileStream);
+        //            }
+        //            model.ImagePath = fileName;
+        //            model.AuthorId = (int)HttpContext.Session.GetInt32("id");
+        //            await _context.AddAsync(model);
+        //            await _context.SaveChangesAsync();
+        //            return Json(true);
+        //        }
+        //    }
 
-		//    return Json(false);
-		//}
+        //    return Json(false);
+        //}
 
-		[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+
+        public async Task<IActionResult> DeleteBlog(int id)
+        {
+            var blogToDelete = await _context.Blog.FindAsync(id);
+
+            if (blogToDelete == null)
+            {
+                // Blog bulunamazsa HTTP 404 (Not Found) döndürün
+                return NotFound();
+            }
+
+            // Blog bulunduğunda doğrudan silme işlemini gerçekleştiririz.
+            _context.Blog.Remove(blogToDelete);
+
+            // Değişiklikleri veritabanına kaydedin
+            try
+            {
+                await _context.SaveChangesAsync();
+                // Silme işlemi başarılı olduğunda HTTP 200 (OK) döndürün
+                return Ok(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                // Hata durumunda HTTP 500 (Internal Server Error) döndürün ve hata mesajını içeren bir nesne döndürün
+                return StatusCode(500, new { success = false, message = "Silme işlemi başarısız oldu." });
+            }
+        }
+
+
+
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 		public IActionResult Error()
 		{
 			return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });

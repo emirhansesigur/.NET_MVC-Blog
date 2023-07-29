@@ -45,10 +45,9 @@
                     <h3>
                         <a href="single.html">Amet consectetur adipisicing </a>
                     </h3>
-                    <p>
-                        @Model.Content
-                        @Model.Content
-                    </p>
+                    <div class="blog-content">
+                        @Html.Raw(@Model.Content)
+                    </div>
                     <a href="single.html" class="btn btn-primary read-m">Read More - bunu sil</a>
                 </div>
 

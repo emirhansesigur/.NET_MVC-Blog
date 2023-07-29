@@ -6,7 +6,7 @@
 
 <section class="main-content-w3layouts-agileits">
     <div class="container">
-        <h3 class="tittle">Blog Posts</h3>
+        <h3 class="tittle">Blog Paylaşımları</h3>
         <div class="inner-sec">
             <!--left-->
             <div class="left-blog-info-w3layouts-agileits text-left">
@@ -14,8 +14,8 @@
                     @foreach (var x in Model)
                     {
                         <div class="col-lg-4 card">
-                            <a href="single.html">
-                                <img src="images/7.jpg" class="card-img-top img-fluid" alt="">
+                            <a href="/Blog/Detials/@x.Id">
+                                <img src="" class="card-img-top img-fluid" alt="Blog Fotoğrafı">
                             </a>
                             <div class="card-body">
                                 <ul class="blog-icons my-4">
@@ -39,7 +39,7 @@
                                 <h5 class="card-title">
                                     <a href="/Blog/Detials/@x.Id">@x.Title</a>
                                 </h5>
-                                <p class="card-text mb-3">@x.Content</p>
+                                <p class="card-text mb-3">@Html.Raw(@x.Content)</p>
                                 <a href="/Blog/Detials/@x.Id" class="btn btn-primary read-m">Read More</a>
                             </div>
                         </div>

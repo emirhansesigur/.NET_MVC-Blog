@@ -1,0 +1,41 @@
+# ASP.NET Core
+# Binaries
+bin/
+obj/
+
+# Visual Studio Code'ta oluşturulan klasörler
+.vscode/
+
+# Microsoft tarafından oluşturulan klasörler
+/.vs/
+
+# NuGet paket klasörü
+/packages/
+
+# Çözüm klasörü
+*.suo
+*.user
+*.sln.docstates
+
+# ASP.NET Core proje dosyaları
+*.csproj
+*.user
+*.vspscc
+*.vssscc
+*.dotCover
+*.csproj.user
+*.publishsettings
+node_modules/
+
+# Uygulama bağımlılıkları
+# Herhangi bir paket yöneticisi (npm, yarn, dll vb.) ile yüklenecek olan bağımlılık klasörlerini yoksayabilirsiniz.
+# Örneğin, Node.js projeleri için node_modules/ veya Yarn projeleri için yarn.lock yoksayılabilir.
+
+# İçerikleriyle birlikte IDE veya metin düzenleyiciler tarafından oluşturulan klasörleri yoksay.
+.idea/
+.vscode/
+.vs
+
+# Sistem tarafından oluşturulan klasörleri yoksay.
+.DS_Store
+Thumbs.db
