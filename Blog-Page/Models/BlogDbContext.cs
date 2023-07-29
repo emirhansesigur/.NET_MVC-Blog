@@ -23,9 +23,8 @@ namespace BlogNET.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
                 optionsBuilder.UseSqlServer("Server=EMIR\\SQLEXPRESS01;Database=BlogDb;Integrated Security=True;");
-            }
+            } // Integrated Security=True; yerine User Id=sa;Password=1q2w3e diyebilirdik.
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

@@ -25,7 +25,7 @@ namespace AdminBlog.Models
         [NotMapped]
         public IFormFile CoverFoto { get; set; }
         public int CategoryId { get; set; }
-
+        public string CategoryName{ get; set; }
 
     }
 }

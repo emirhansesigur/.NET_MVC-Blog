@@ -1,6 +1,8 @@
+using BlogNET.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -24,6 +26,13 @@ namespace BlogNET
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+
+            services.AddDbContext<BlogDbContext>(options =>
+            options.UseSqlServer(Configuration.GetConnectionString("BlogDb")));
+
+
+            services.AddSession(); // SESSION ICIN EKLE 
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -46,11 +55,14 @@ namespace BlogNET
 
             app.UseAuthorization();
 
+            app.UseSession(); // SESSION ICIN EKLE
+
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Login}/{action=Index}/{id?}");
+                    pattern: "{controller=Blog}/{action=Index}/{id?}");
             });
         }
     }
