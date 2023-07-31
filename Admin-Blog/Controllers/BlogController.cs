@@ -91,11 +91,17 @@ namespace AdminBlog.Controllers
 				// category name ekleme
 				model.IsPublish = false;
 
-				string folder = "/images/";
-				folder += model.CoverFoto.FileName + Guid.NewGuid().ToString();
-				string serverFolder = _webHostEnvironment.WebRootPath + folder;
+				string parentDirectory = Directory.GetParent(_webHostEnvironment.ContentRootPath).FullName;
+				
+				string folder = "images/";
+				folder += Guid.NewGuid().ToString() +  model.CoverFoto.FileName;
+				
+				string serverFolder = parentDirectory + "/Blog-Page/wwwroot/" + folder;
 
-				await model.CoverFoto.CopyToAsync(new FileStream(serverFolder, FileMode.Create));
+				model.ImagePath = folder;
+
+
+                await model.CoverFoto.CopyToAsync(new FileStream(serverFolder, FileMode.Create));
 				model.AuthorId = (int)HttpContext.Session.GetInt32("id");
 
 				await _context.AddAsync(model);
@@ -107,6 +113,12 @@ namespace AdminBlog.Controllers
 
 			return Json(false);
 		}
+
+        //string parentDirectory = Directory.GetParent(_webHostEnvironment.ContentRootPath).FullName;
+
+        //string folder = "/Blog-Page/wwwroot/images/";
+        //folder += model.CoverFoto.FileName + Guid.NewGuid().ToString();
+        //string serverFolder = parentDirectory + folder;	
 
         //[HttpPost]
         //public async Task<IActionResult> Add(Blog model)
