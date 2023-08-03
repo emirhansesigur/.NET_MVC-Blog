@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.Security.Cryptography;
 using System.Text;
+using Microsoft.AspNetCore.Authentication;
 
 namespace AdminBlog.Controllers
 {
@@ -103,13 +104,14 @@ namespace AdminBlog.Controllers
 
                 string hashedPassword = sb.ToString();
 
-                var sql = "INSERT INTO Author (Name, Surname, Email, Password) VALUES (@Name, @Surname, @Email, @Password)";
+                var sql = "INSERT INTO Author (Name, Surname, Email, Password, Role) VALUES (@Name, @Surname, @Email, @Password, @Role)";
 
                 var parameters = new List<SqlParameter>();
                 parameters.Add(new SqlParameter("@Name", author.Name));
                 parameters.Add(new SqlParameter("@Surname", author.Surname));
                 parameters.Add(new SqlParameter("@Email", author.Email));
                 parameters.Add(new SqlParameter("@Password", hashedPassword)); // Hashlenmiş parolayı kullan
+                parameters.Add(new SqlParameter("@Role", author.Role));
 
                 await _context.Database.ExecuteSqlRawAsync(sql, parameters);
 

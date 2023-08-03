@@ -1,75 +1,41 @@
-###################
-# compiled source #
-###################
-*.com
-*.class
-*.dll
-*.exe
-*.pdb
-*.dll.config
-*.cache
-*.suo
-# Include dlls if they’re in the NuGet packages directory
-!/packages/*/lib/*.dll
-!/packages/*/lib/*/*.dll
-# Include dlls if they're in the CommonReferences directory
-!*CommonReferences/*.dll
-####################
-# VS Upgrade stuff #
-####################
-UpgradeLog.XML
-_UpgradeReport_Files/
-###############
-# Directories #
-###############
+# ASP.NET Core
+# Binaries
 bin/
 obj/
-TestResults/
-###################
-# Web publish log #
-###################
-*.Publish.xml
-#############
-# Resharper #
-#############
-/_ReSharper.*
-*.ReSharper.*
-############
-# Packages #
-############
-# it’s better to unpack these files and commit the raw source
-# git has its own built in compression methods
-*.7z
-*.dmg
-*.gz
-*.iso
-*.jar
-*.rar
-*.tar
-*.zip
-######################
-# Logs and databases #
-######################
-*.log
-*.sqlite
-# OS generated files #
-######################
-.DS_Store?
-ehthumbs.db
-Icon?
-Thumbs.db
-[Bb]in
-[Oo]bj
-[Tt]est[Rr]esults
+
+# Visual Studio Code'ta oluşturulan klasörler
+.vscode/
+
+# Microsoft tarafından oluşturulan klasörler
+/.vs/
+
+# NuGet paket klasörü
+/packages/
+
+# Çözüm klasörü
 *.suo
 *.user
-*.[Cc]ache
-*[Rr]esharper*
-packages
-NuGet.exe
-_[Ss]cripts
-*.exe
-*.dll
-*.nupkg
-*.ncrunchsolution
-*.dot[Cc]over
+*.sln.docstates
+
+# ASP.NET Core proje dosyaları
+*.csproj
+*.user
+*.vspscc
+*.vssscc
+*.dotCover
+*.csproj.user
+*.publishsettings
+node_modules/
+
+# Uygulama bağımlılıkları
+# Herhangi bir paket yöneticisi (npm, yarn, dll vb.) ile yüklenecek olan bağımlılık klasörlerini yoksayabilirsiniz.
+# Örneğin, Node.js projeleri için node_modules/ veya Yarn projeleri için yarn.lock yoksayılabilir.
+
+# İçerikleriyle birlikte IDE veya metin düzenleyiciler tarafından oluşturulan klasörleri yoksay.
+.idea/
+.vscode/
+.vs
+
+# Sistem tarafından oluşturulan klasörleri yoksay.
+.DS_Store
+Thumbs.db

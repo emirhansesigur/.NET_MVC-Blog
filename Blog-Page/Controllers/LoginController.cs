@@ -4,22 +4,27 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace BlogNET.Controllers
 {
     public class LoginController : Controller
     {
-        //private readonly ILogger<LoginController> _logger;
         private readonly BlogDbContext _context;
+        private IConfiguration _configuration;
 
-
-        public LoginController(/*ILogger<LoginController> logger,*/ BlogDbContext context)
+        public LoginController(BlogDbContext context, IConfiguration configuration)
         {
-            //_logger = logger;
+            _configuration = configuration;
             _context = context;
         }
 
@@ -30,6 +35,8 @@ namespace BlogNET.Controllers
 
 
         //[AllowAnonymous]
+        // authorization  - yetki
+        // authentication - kimlik kanıtlama
         [HttpPost]
         public async Task<IActionResult> Index(Author model) // home login e gidiyor. o yüzden düzeltmeler yappp.
         {
@@ -52,7 +59,7 @@ namespace BlogNET.Controllers
 
                 string hashedPassword = sb.ToString();
 
-                var emailParam = new SqlParameter("@Email", model.Email);
+                var emailParam = new SqlParameter("@Email", model.Email.ToLower());
                 var passwordParam = new SqlParameter("@Password", hashedPassword);
 
                 var query = "SELECT TOP 1 * FROM Author WHERE Email = @Email AND Password = @Password";
@@ -60,18 +67,52 @@ namespace BlogNET.Controllers
 
                 var author = await _context.Author.FromSqlRaw(query, emailParam, passwordParam).FirstOrDefaultAsync();
 
-                if (author == null)
+                if (author != null)
                 {
-                    // BURADA KALDIK
-
-                    return RedirectToAction(nameof(Index));
+                    var token = Generate(author);
+                    return Ok(token);
                 }
 
-                HttpContext.Session.SetInt32("id", author.Id);
-
-                return RedirectToAction("Index", "Blog");
+                return NotFound("User Not Found");
             }
         }
+
+        private string Generate(Author user)
+        {
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+
+            var claims = new[]
+            {
+                new Claim(ClaimTypes.NameIdentifier, user.Name),
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.Surname, user.Surname),
+                new Claim(ClaimTypes.Role, user.Role)
+            };
+
+
+            var token = new JwtSecurityToken(_configuration["Jwt:Issuer"],
+              _configuration["Jwt:Audience"],
+              claims,
+              expires: DateTime.Now.AddMinutes(15),
+              signingCredentials: credentials);
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+        //private Author Authenticate(Author userLogin)
+        //{
+        //    var currentUser = _context.Author.FirstOrDefault(o => o.Email.ToLower() == userLogin.Email.ToLower() && o.Password == userLogin.Password);
+
+        //    if (currentUser != null)
+        //    {
+        //        return currentUser;
+        //    }
+
+        //    return null;
+        //}
+
+
 
     }
 }

@@ -8,111 +8,106 @@ using Microsoft.Extensions.Logging;
 using AdminBlog.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.IO;
-using AdminBlog.Filter;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Hosting;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace AdminBlog.Controllers
 {
-	//[UserFilter] - [authorize değil miydi ?]
-	// buraya bak.
-	public class BlogController : Controller
-	{
-		private readonly ILogger<BlogController> _logger;
-		private readonly BlogContext _context;
-		private readonly IWebHostEnvironment _webHostEnvironment;
+    //[UserFilter] - [authorize değil miydi ?]
+    // buraya bak.
+    public class BlogController : Controller
+    {
+        private readonly ILogger<BlogController> _logger;
+        private readonly BlogContext _context;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-		public BlogController(ILogger<BlogController> logger,
-			BlogContext context,
-			IWebHostEnvironment webHostEnvironment)
-		{
-			_logger = logger;
-			_context = context;
-			_webHostEnvironment = webHostEnvironment;
-		}
+        public BlogController(ILogger<BlogController> logger,
+            BlogContext context,
+            IWebHostEnvironment webHostEnvironment)
+        {
+            _logger = logger;
+            _context = context;
+            _webHostEnvironment = webHostEnvironment;
+        }
 
-		//[Authorize]
-		public IActionResult Index()
-		{
-			//var list = _context.Blog.ToList();
-			var list = _context.Blog.FromSqlRaw("SELECT * FROM Blog").ToList();
+        //[Authorize]
+        public IActionResult Index()
+        {
+            //var list = _context.Blog.ToList();
+            var list = _context.Blog.FromSqlRaw("SELECT * FROM Blog").ToList();
 
-			return View(list);
-		}
+            return View(list);
+        }
 
-		public IActionResult Publish(int Id) // yayinlama islemini tersine cevirir.
-		{
-			var blog = _context.Blog.Find(Id);
+        public IActionResult Publish(int Id) // yayinlama islemini tersine cevirir.
+        {
+            var blog = _context.Blog.Find(Id);
 
-			blog.IsPublish = !(blog.IsPublish);
-			_context.Update(blog);
-			_context.SaveChanges();
-			return RedirectToAction(nameof(Index));
-		}
+            blog.IsPublish = !(blog.IsPublish);
+            _context.Update(blog);
+            _context.SaveChanges();
+            return RedirectToAction(nameof(Index));
+        }
 
-		public IActionResult Add() // Categories'e gonderiliyor.
-		{
-			List<SelectListItem> values = _context.Category.Select(w =>
-				new SelectListItem
-				{
-					Text = w.Name,
-					Value = w.Id.ToString()
-				}
-			).ToList();
-			ViewBag.Values = values;
-			return View();
-		}
+        public IActionResult Add() // Categories'e gonderiliyor.
+        {
+            List<SelectListItem> values = _context.Category.Select(w =>
+                new SelectListItem
+                {
+                    Text = w.Name,
+                    Value = w.Id.ToString()
+                }
+            ).ToList();
+            ViewBag.Values = values;
+            return View();
+        }
 
-		[HttpPost]
-		//public IActionResult Add(Blog model) 
-		public async Task<IActionResult> Add(Blog model) // Category.Id elimizde. 
-		{
-			// Category ismini de elde etmemiz gerekiyor.
-			var foundCategory = _context.Category.Find(model.CategoryId);
+        [HttpPost]
+        public async Task<IActionResult> Add(Blog model) // Category.Id elimizde. 
+        {
+            // Category ismini de elde etmemiz gerekiyor.
+            var foundCategory = _context.Category.Find(model.CategoryId);
 
-			if (foundCategory == null)
-			{
-				return Json(false); // false yerine baska bir sey dondurerek uyarı verdir.
-			}
+            if (foundCategory == null)
+            {
+                return Json(false); // false yerine baska bir sey dondurerek uyarı verdir.
+            }
 
-			// Eğer nesne null değilse categoryName özelliğine erişme
-			model.CategoryName = foundCategory.Name;
-			//if (!ModelState.IsValid) burada return View(model) yapamadığımız için validation kısmında sorun yaşanıyor.
-			//{
-			//    return View(model);
-			//}
+            // Eğer nesne null değilse categoryName özelliğine erişme
+            model.CategoryName = foundCategory.Name;
+            //if (!ModelState.IsValid) burada return View(model) yapamadığımız için validation kısmında sorun yaşanıyor.
+            //{
+            //    return View(model);
+            //}
 
-			//model.Category.Name = 
+            if (model.CoverFoto != null)
+            {
+                // category name ekleme
+                model.IsPublish = false;
 
-			if (model.CoverFoto != null)
-			{
-				// category name ekleme
-				model.IsPublish = false;
+                string parentDirectory = Directory.GetParent(_webHostEnvironment.ContentRootPath).FullName;
 
-				string parentDirectory = Directory.GetParent(_webHostEnvironment.ContentRootPath).FullName;
-				
-				string folder = "images/";
-				folder += Guid.NewGuid().ToString() +  model.CoverFoto.FileName;
-				
-				string serverFolder = parentDirectory + "/Blog-Page/wwwroot/" + folder;
+                string folder = "images/";
+                folder += Guid.NewGuid().ToString() + model.CoverFoto.FileName;
 
-				model.ImagePath = folder;
+                string serverFolder = parentDirectory + "/Blog-Page/wwwroot/" + folder;
+
+                model.ImagePath = folder;
 
 
                 await model.CoverFoto.CopyToAsync(new FileStream(serverFolder, FileMode.Create));
-				model.AuthorId = (int)HttpContext.Session.GetInt32("id");
+                model.AuthorId = (int)HttpContext.Session.GetInt32("id");
 
-				await _context.AddAsync(model);
-				await _context.SaveChangesAsync();
-				return Json(true);
+                await _context.AddAsync(model);
+                await _context.SaveChangesAsync();
+                return Json(true);
+            }
 
-			}
 
-
-			return Json(false);
-		}
+            return Json(false);
+        }
 
         //string parentDirectory = Directory.GetParent(_webHostEnvironment.ContentRootPath).FullName;
 
@@ -176,9 +171,9 @@ namespace AdminBlog.Controllers
 
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-		public IActionResult Error()
-		{
-			return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-		}
-	}
+        public IActionResult Error()
+        {
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+    }
 }

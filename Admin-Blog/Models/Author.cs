@@ -15,5 +15,6 @@ namespace AdminBlog.Models{
         [Required(ErrorMessage = "Lütfen Bir Şifre Giriniz")]
         [StringLength(16, MinimumLength = 6, ErrorMessage = "Şifre 6-16 karakter uzunluğunda olmalıdır.")]
         public string Password { get; set; }
+        public string Role { get; set; }
     }
 }

@@ -61,6 +61,14 @@
                         <div id="Password2">Parola: </div>
                         <input type="password" name="Password" id="Password" class="form-control" placeholder="Parola">
                     </div>
+                    <div class="form-group">
+                        <label for="selectOption">Seçenek:</label>
+                        <select id="Role" class="form-control">
+                            <option value="SuperAdmin">SuperAdmin</option>
+                            <option value="Admin">Admin</option>
+                            <option value="Kullanıcı">Kullanıcı</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" onclick="clearForm()" data-dismiss="modal">KAPAT</button>
@@ -103,6 +111,7 @@
             var surname = document.getElementById("Surname").value;
             var email = document.getElementById("Email").value;
             var password = document.getElementById("Password").value;
+            var role = document.getElementById("Role").value;
 
             var emailReg = /^([\w-\.]+@@([\w-]+\.)+[\w-]{2,4})?$/;
 
@@ -137,7 +146,8 @@
                         Name: name,
                         Surname: surname,
                         Email: email,
-                        Password: password
+                        Password: password,
+                        Role: role
                     },
                     success: function (data) {
                         if (data) {
@@ -150,7 +160,7 @@
                                 location.reload();
                             });
                         }
-                        else{
+                        else {
                             swal.fire({
                                 icon: 'error',
                                 title: 'Hata!',
@@ -160,8 +170,8 @@
                                 $('#AuthorModal').modal('show');
                             });
                         }
-                        }
-                    });
+                    }
+                });
 
             }
 
