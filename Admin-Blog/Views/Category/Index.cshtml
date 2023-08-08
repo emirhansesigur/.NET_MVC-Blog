@@ -1,13 +1,13 @@
 ﻿@using Microsoft.AspNetCore.Http;
 @model IEnumerable<AdminBlog.Models.Category>
 @*@model AdminBlog.Models.Category*@
-
+<h4>Burası da id ye göre sorgulanacak ve Login olan kişinin eklediği kategoriler görünecek.</h4>
 @{
     ViewData["Title"] = "Category";
 }
 
 @{
-    int? id = Context.Session.GetInt32("id");
+    int? id = Context.Session.GetInt32("Id");
 }
 
 <button type="button" onclick="$('#CategoryModal').modal('show')" class="btn btn-primary">Kategori Ekle</button>

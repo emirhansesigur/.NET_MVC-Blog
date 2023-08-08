@@ -283,3 +283,5 @@ C:\Users\Emir\Desktop\BLOG\Blog-Page\bin\Debug\netcoreapp3.1\Microsoft.IdentityM
 C:\Users\Emir\Desktop\BLOG\Blog-Page\bin\Debug\netcoreapp3.1\System.IdentityModel.Tokens.Jwt.dll
 C:\Users\Emir\Desktop\BLOG\Blog-Page\bin\Debug\netcoreapp3.1\System.Text.Encodings.Web.dll
 C:\Users\Emir\Desktop\BLOG\Blog-Page\bin\Debug\netcoreapp3.1\System.Text.Json.dll
+C:\Users\Emir\Desktop\BLOG\Blog-Page\obj\Debug\netcoreapp3.1\Razor\Views\Login\Super.cshtml.g.cs
+C:\Users\Emir\Desktop\BLOG\Blog-Page\bin\Debug\netcoreapp3.1\libman.json

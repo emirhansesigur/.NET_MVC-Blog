@@ -37,7 +37,14 @@ namespace BlogNET.Controllers
         //[AllowAnonymous]
         // authorization  - yetki
         // authentication - kimlik kanıtlama
-        [HttpPost]
+        //[Authorize(Roles = "SuperAdmin")]
+        //public IActionResult Super()
+        //{
+        //    string token = HttpContext.Session.GetString("ali");
+        //    return View();
+        //}
+
+        [HttpPost]  
         public async Task<IActionResult> Index(Author model) // home login e gidiyor. o yüzden düzeltmeler yappp.
         {
             using (SHA256 sha256 = SHA256.Create())
@@ -69,36 +76,39 @@ namespace BlogNET.Controllers
 
                 if (author != null)
                 {
-                    var token = Generate(author);
-                    return Ok(token);
+                    //var token = Generate(author);
+                    //HttpContext.Session.SetString("token", token);
+                    return RedirectToAction("Index");
                 }
 
                 return NotFound("User Not Found");
             }
         }
 
-        private string Generate(Author user)
-        {
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
-            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+        //private string Generate(Author user)
+        //{
+        //    var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+        //    var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
-            var claims = new[]
-            {
-                new Claim(ClaimTypes.NameIdentifier, user.Name),
-                new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Surname, user.Surname),
-                new Claim(ClaimTypes.Role, user.Role)
-            };
+        //    var claims = new[]
+        //    {
+        //        new Claim(ClaimTypes.NameIdentifier, user.Name),
+        //        new Claim(ClaimTypes.Email, user.Email),
+        //        new Claim(ClaimTypes.Surname, user.Surname),
+        //        new Claim(ClaimTypes.Role, user.Role)
+        //    };
 
 
-            var token = new JwtSecurityToken(_configuration["Jwt:Issuer"],
-              _configuration["Jwt:Audience"],
-              claims,
-              expires: DateTime.Now.AddMinutes(15),
-              signingCredentials: credentials);
+        //    var token = new JwtSecurityToken(_configuration["Jwt:Issuer"],
+        //      _configuration["Jwt:Audience"],
+        //      claims,
+        //      expires: DateTime.Now.AddMinutes(15),
+        //      signingCredentials: credentials);
 
-            return new JwtSecurityTokenHandler().WriteToken(token);
-        }
+        //    return new JwtSecurityTokenHandler().WriteToken(token);
+        //}
+
+
 
         //private Author Authenticate(Author userLogin)
         //{

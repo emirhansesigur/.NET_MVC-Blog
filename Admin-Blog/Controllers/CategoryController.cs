@@ -1,4 +1,5 @@
 ﻿using AdminBlog.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
@@ -29,8 +30,30 @@ namespace AdminBlog.Controllers
 
         public IActionResult Index()
         {
-            var list = _context.Category.FromSqlRaw("SELECT * FROM Category").ToList();
-            return View(list);
+            var id = HttpContext.Session.GetInt32("Id");
+            var superadmin = HttpContext.Session.GetString("superAdmin");
+            if (id.HasValue)
+            {
+                var categories = _context.Category
+                        .Where(category => category.AuthorId == id)
+                        .ToList();
+                return View(categories);
+
+            }
+            else if (superadmin == "superAdmin")
+            {
+                // eger superadmin giris yaptiysa hepsini dondur
+                var categories = _context.Category.ToList();
+                return View(categories);
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            // eger admin giris yaptiysa sadece onun kategorilerini dondur
+
+
+
         }
 
 
@@ -43,6 +66,12 @@ namespace AdminBlog.Controllers
             //    return RedirectToAction(nameof(Index));
             //}
 
+
+            var AuthorId = (int)HttpContext.Session.GetInt32("Id");
+            string authorName = _context.Author
+                        .Where(author => author.Id == AuthorId)
+                        .Select(author => author.Name)
+                        .FirstOrDefault();
 
             var sql = "SELECT * FROM Category WHERE Name = @Name";
             var count = _context.Category.FromSqlRaw(sql, new SqlParameter("@Name", category.Name)).ToList();

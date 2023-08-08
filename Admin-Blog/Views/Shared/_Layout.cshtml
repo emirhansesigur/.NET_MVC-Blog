@@ -1,7 +1,8 @@
 ﻿@using Microsoft.AspNetCore.Http;
 
 @{
-    int? id = Context.Session.GetInt32("id");
+    int? id = Context.Session.GetInt32("Id");
+    string superAdmin = Context.Session.GetString("superAdmin");
 }
 
 <!DOCTYPE html>
@@ -27,24 +28,36 @@
                     <ul class="navbar-nav flex-grow-1">
 
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home ..</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Ana Sayfa</a>
                         </li>
+                        @if (superAdmin != "superAdmin")
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Category" asp-action="Index">Kategorilerin</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Blog" asp-action="UsersBlogs">Senin Yazıların</a>
+                            </li>
+                        }
+                        @if (superAdmin == "superAdmin")
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Author">Yazarlar(superadmin)</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Blog" asp-action="Index">Tüm Bloglar(superadmin)</a>
+                            </li>
+                        }
+                        @if (id.HasValue || (superAdmin == "superAdmin"))
+                        {
+                            <li class="nav-item logout">
+                                <a href="/Home/LogOut" class="btn btn-secondary">Çıkış Yap</a>
+                            </li>
 
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Category" asp-action="Index">Category</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Author">Author</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Blog" asp-action="Index">Blog</a>
-                        </li>
+                        }
 
                     </ul>
-                    @if (id.HasValue)
-                    {
-                        <a href="/Home/LogOut" class="btn btn-secondary">Çıkış Yap</a>
-                    }
+
                 </div>
             </div>
         </nav>

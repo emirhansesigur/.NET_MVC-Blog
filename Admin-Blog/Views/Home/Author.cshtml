@@ -2,7 +2,8 @@
 @{
     ViewData["Title"] = "Author";
 }
-
+<h3>Buraya sadece Super Admin erişebilecek</h3>
+<br />
 <button type="button" onclick="addForm(); $('#AuthorModal').modal('show'); clearForm();" class="btn btn-primary">Admin Ekle</button>
 
 <table class="table table-hover">
@@ -11,6 +12,7 @@
     <th scope="col">Name</th>
     <th scope="col">Surname</th>
     <th scope="col">Email</th>
+    <th scope="col">Rol</th>
     <th scope="col">Parola-YAP</th>
     <th scope="col"></th>
     </thead>
@@ -23,6 +25,7 @@
                 <td>@item.Name</td>
                 <td>@item.Surname</td>
                 <td>@item.Email</td>
+                <td>@item.Role</td>
                 @*<td>@item.Password</td>*@
                 <td>
                     <a class="btn btn-danger" asp-route-id="@item.Id" asp-controller="Home" asp-action="DeleteAuthor">Sil</a>
@@ -64,7 +67,7 @@
                     <div class="form-group">
                         <label for="selectOption">Seçenek:</label>
                         <select id="Role" class="form-control">
-                            <option value="SuperAdmin">SuperAdmin</option>
+                            <option value="SuperAdmin">Super Admin</option>
                             <option value="Admin">Admin</option>
                             <option value="Kullanıcı">Kullanıcı</option>
                         </select>
@@ -183,24 +186,33 @@
                 type: "POST",
                 dataType: 'json',
                 url: "@Url.Action("UpdateAuthor", "Home")",
-                cache: false,
                 data: {
                     Id: $("#Id").val(),
                     Name: $("#Name").val(),
                     Surname: $("#Surname").val(),
-                    Email: $("#Email").val()/*,*/
-                    //Password: $("#Password").val()
+                    Role: $("#Role").val(),
+                    Email: $("#Email").val()
                 },
                 success: function (data) {
-                    //if (data.Redirect) {
-                    //    console.log("yazar mi??");
-                    //    window.location.href = data.RedirectUrl
-                    //}
-                    if (data === true) { // buralar neden calismiyor ?????
-                        alert("update btn basarili")
+                    if (data) {
+                        swal.fire({
+                            icon: 'success',
+                            title: 'Basarili!',
+                            text: 'Kayıt işlemi başarılı..',
+                            confirmButtonText: 'Tamam'
+                        }).then(function () {
+                            location.reload();
+                        });
                     }
                     else {
-                        alert("update btn BASARISIZ")
+                        swal.fire({
+                            icon: 'error',
+                            title: 'Hata!',
+                            text: 'Bir hata olustu.',
+                            confirmButtonText: 'Tamam'
+                        }).then(function () {
+                            $('#AuthorModal').modal('show');
+                        });
                     }
                 }
             });

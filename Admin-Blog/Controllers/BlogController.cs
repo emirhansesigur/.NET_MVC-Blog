@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Hosting;
 using static System.Net.Mime.MediaTypeNames;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AdminBlog.Controllers
 {
@@ -32,13 +33,32 @@ namespace AdminBlog.Controllers
             _webHostEnvironment = webHostEnvironment;
         }
 
-        //[Authorize]
-        public IActionResult Index()
-        {
-            //var list = _context.Blog.ToList();
-            var list = _context.Blog.FromSqlRaw("SELECT * FROM Blog").ToList();
 
+        public IActionResult Index() // tum bloglar listelenir
+        {
+            if (HttpContext.Session.GetString("superAdmin") != "superAdmin")
+            {
+                //var list = _context.Blog.ToList();    
+                return RedirectToAction("Index", "Home");
+            }
+
+            var list = _context.Blog.ToList();
             return View(list);
+        }
+
+        public IActionResult UsersBlogs()
+        {
+            var id = HttpContext.Session.GetInt32("Id");
+            if (id == null)
+            {
+                //var list = _context.Blog.ToList();    
+                return RedirectToAction("Index", "Home");
+            }
+
+            //var list = _context.Blog.ToList();
+            var userBlogs = _context.Blog.Where(blog => blog.AuthorId == id).ToList();
+
+            return View(userBlogs);
         }
 
         public IActionResult Publish(int Id) // yayinlama islemini tersine cevirir.
@@ -48,11 +68,18 @@ namespace AdminBlog.Controllers
             blog.IsPublish = !(blog.IsPublish);
             _context.Update(blog);
             _context.SaveChanges();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(UsersBlogs));
         }
 
         public IActionResult Add() // Categories'e gonderiliyor.
         {
+            var id = HttpContext.Session.GetInt32("Id");
+            if (id == null)
+            {
+                //var list = _context.Blog.ToList();    
+                return RedirectToAction("Index", "Home");
+            }
+
             List<SelectListItem> values = _context.Category.Select(w =>
                 new SelectListItem
                 {
@@ -98,7 +125,7 @@ namespace AdminBlog.Controllers
 
 
                 await model.CoverFoto.CopyToAsync(new FileStream(serverFolder, FileMode.Create));
-                model.AuthorId = (int)HttpContext.Session.GetInt32("id");
+                model.AuthorId = (int)HttpContext.Session.GetInt32("Id");
 
                 await _context.AddAsync(model);
                 await _context.SaveChangesAsync();
@@ -130,7 +157,7 @@ namespace AdminBlog.Controllers
         //                await file.CopyToAsync(fileStream);
         //            }
         //            model.ImagePath = fileName;
-        //            model.AuthorId = (int)HttpContext.Session.GetInt32("id");
+        //            model.AuthorId = (int)HttpContext.Session.GetInt32("Id");
         //            await _context.AddAsync(model);
         //            await _context.SaveChangesAsync();
         //            return Json(true);

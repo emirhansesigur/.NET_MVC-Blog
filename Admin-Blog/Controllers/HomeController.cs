@@ -17,6 +17,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.Security.Cryptography;
 using System.Text;
 using Microsoft.AspNetCore.Authentication;
+using System.Threading.Tasks.Dataflow;
 
 namespace AdminBlog.Controllers
 {
@@ -80,16 +81,20 @@ namespace AdminBlog.Controllers
 
                     return RedirectToAction(nameof(Index));
                 }
+                else if (author.Role == "SuperAdmin")
+                {
+                    HttpContext.Session.SetString("superAdmin", "superAdmin");
+                    return RedirectToAction("Index", "Blog");
+                }
 
-                HttpContext.Session.SetInt32("id", author.Id);
-
-                return RedirectToAction("Add", "Blog");
+                HttpContext.Session.SetInt32("Id", author.Id);
+                return RedirectToAction("UsersBlogs", "Blog");
             }
         }
 
 
         public async Task<IActionResult> AddAuthor(Author author)
-        {
+        {   
             // SHA-256 hash hesaplama
             using (SHA256 sha256 = SHA256.Create())
             {
@@ -120,6 +125,21 @@ namespace AdminBlog.Controllers
 
         }
 
+        public async Task<IActionResult> UpdateAuthor(Author author) // burada kaldık
+        {
+            var sqll = "UPDATE Author SET Name = @Name, Surname = @Surname,Role = @Role, Email = @Email WHERE Id = @Id"; //, Password = @
+
+            var parameters = new List<SqlParameter>();
+            parameters.Add(new SqlParameter("@Name", author.Name));
+            parameters.Add(new SqlParameter("@Surname", author.Surname));
+            parameters.Add(new SqlParameter("@Email", author.Email));
+            parameters.Add(new SqlParameter("@Role", author.Role));
+            parameters.Add(new SqlParameter("@Id", author.Id));
+            await _context.Database.ExecuteSqlRawAsync(sqll, parameters);
+
+            return Json(true);
+        }
+
         public async Task<IActionResult> AuthorDetails(int Id) // ?
         {
 
@@ -127,68 +147,17 @@ namespace AdminBlog.Controllers
             return Json(author);
         }
 
-        //public async Task<IActionResult> AuthorUpdate(int Id) // update sayfası nasıl açılıyor incele.
-        //{
-
-
-
-        //    return RedirectToAction(nameof(Author));
-        //}
-
-        //public async Task<IActionResult> AuthorUpdate(int id) // EN SON BUNDA KALDIK.
-        //{
-
-
-        //    var sql = "UPDATE Author SET Name = @Name, Surname = @Surname, Email = @Email, Password = @Password WHERE Id = @Id;";
-
-        //    var parameters = new List<SqlParameter>();
-        //    parameters.Add(new SqlParameter("@Name", author.Name));
-        //    parameters.Add(new SqlParameter("@Surname", author.Surname));
-        //    parameters.Add(new SqlParameter("@Email", author.Email));
-        //    parameters.Add(new SqlParameter("@Password", author.Password));
-        //    parameters.Add(new SqlParameter("@Id", author.Id));
-
-        //    await _context.Database.ExecuteSqlRawAsync(sql, parameters.ToArray());
-
-        //    return RedirectToAction(nameof(Author));
-        //}
-
-
-
 
         public IActionResult Author()
         {
+            if (HttpContext.Session.GetString("superAdmin") != "superAdmin")
+            {
+                //var list = _context.Blog.ToList();    
+                return RedirectToAction("Index", "Home");
+            }
             List<Author> list = _context.Author.OrderBy(a => a.Id).ToList();
             return View(list);
         }
-
-        ////[Authorize]
-        //public IActionResult Author()
-        //{
-        //    var list = _context.Author.FromSqlRaw("SELECT * FROM Author").ToList();
-        //    return View(list);
-        //}
-
-
-
-
-        public async Task<IActionResult> UpdateAuthor(Author author) // burada kaldık
-        {
-            var sqll = "UPDATE Author SET Name = @Name, Surname = @Surname, Email = @Email WHERE Id = @Id"; //, Password = @
-
-            var parameters = new List<SqlParameter>();
-            parameters.Add(new SqlParameter("@Name", author.Name));
-            parameters.Add(new SqlParameter("@Surname", author.Surname));
-            parameters.Add(new SqlParameter("@Email", author.Email));
-            //parameters.Add(new SqlParameter("@Password", author.Password));
-            parameters.Add(new SqlParameter("@Id", author.Id));
-            await _context.Database.ExecuteSqlRawAsync(sqll, parameters);
-
-            return RedirectToAction(nameof(Index));
-        }
-
-
-
 
         public async Task<IActionResult> DeleteAuthor(int? Id)
         {

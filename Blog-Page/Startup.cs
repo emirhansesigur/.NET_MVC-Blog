@@ -1,4 +1,4 @@
-using BlogNET.Models;
+﻿using BlogNET.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -52,7 +52,17 @@ namespace BlogNET
             options.UseSqlServer(Configuration.GetConnectionString("BlogDb")));
 
 
-            services.AddSession(); // SESSION ICIN EKLE 
+            services.AddSession(options =>
+            {
+                // Oturum süresini belirleyin (örneğin 20 dakika).
+                options.IdleTimeout = TimeSpan.FromMinutes(20);
+                // Oturum çerezinin adını belirleyin (isteğe bağlı).
+               // options.Cookie.Name = "MySessionCookie";
+               // Eğer sadece HTTPS üzerinden çerez gönderilsin istiyorsanız true yapın(isteğe bağlı).
+               //options.Cookie.SecurePolicy = Microsoft.AspNetCore.Http.CookieSecurePolicy.Always;
+               // Eğer sadece aynı site üzerinden çerez gönderilsin istiyorsanız SameSite değerini belirleyin(isteğe bağlı).
+               //options.Cookie.SameSite = Microsoft.AspNetCore.Http.SameSiteMode.Strict;
+            });
 
         }
 
