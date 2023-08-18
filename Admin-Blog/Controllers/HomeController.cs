@@ -44,7 +44,7 @@ namespace AdminBlog.Controllers
             return View();
         }
 
-        [AllowAnonymous]
+        
         [HttpPost]
         public async Task<IActionResult> Index(Author model) // home login e gidiyor. o yüzden düzeltmeler yappp.
         {
@@ -88,13 +88,19 @@ namespace AdminBlog.Controllers
                 }
 
                 HttpContext.Session.SetInt32("Id", author.Id);
-                return RedirectToAction("UsersBlogs", "Blog");
+                return RedirectToAction("Index", "Blog");
             }
         }
 
-
+        //[Authorize(Roles = "SuperAdmin")]
         public async Task<IActionResult> AddAuthor(Author author)
-        {   
+        {
+            if (HttpContext.Session.GetString("superAdmin") != "superAdmin")
+            {
+                //var list = _context.Blog.ToList();    
+                return RedirectToAction("Forbidden", "Error");
+            }
+
             // SHA-256 hash hesaplama
             using (SHA256 sha256 = SHA256.Create())
             {
@@ -125,8 +131,16 @@ namespace AdminBlog.Controllers
 
         }
 
+        //[Authorize(Roles = "SuperAdmin")]
         public async Task<IActionResult> UpdateAuthor(Author author) // burada kaldık
         {
+            if (HttpContext.Session.GetString("superAdmin") != "superAdmin")
+            {
+                //var list = _context.Blog.ToList();    
+                return RedirectToAction("Forbidden", "Error");
+            }
+
+
             var sqll = "UPDATE Author SET Name = @Name, Surname = @Surname,Role = @Role, Email = @Email WHERE Id = @Id"; //, Password = @
 
             var parameters = new List<SqlParameter>();
@@ -140,42 +154,52 @@ namespace AdminBlog.Controllers
             return Json(true);
         }
 
+        //[Authorize(Roles = "SuperAdmin")]
         public async Task<IActionResult> AuthorDetails(int Id) // ?
         {
+            if (HttpContext.Session.GetString("superAdmin") != "superAdmin")
+            {
+                //var list = _context.Blog.ToList();    
+                return RedirectToAction("Forbidden", "Error");
+            }
 
             var author = await _context.Author.FindAsync(Id);
             return Json(author);
         }
 
-
+        //[Authorize(Roles = "SuperAdmin")]
         public IActionResult Author()
         {
             if (HttpContext.Session.GetString("superAdmin") != "superAdmin")
             {
                 //var list = _context.Blog.ToList();    
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Forbidden", "Error");
             }
+
             List<Author> list = _context.Author.OrderBy(a => a.Id).ToList();
             return View(list);
         }
 
+        //[Authorize(Roles = "SuperAdmin")]
         public async Task<IActionResult> DeleteAuthor(int? Id)
         {
+            if (HttpContext.Session.GetString("superAdmin") != "superAdmin")
+            {
+                //var list = _context.Blog.ToList();    
+                return RedirectToAction("Forbidden", "Error");
+            }
+
             var sql = "DELETE FROM Author WHERE Id = @Id";
             await _context.Database.ExecuteSqlRawAsync(sql, new SqlParameter("@Id", Id));
 
             return RedirectToAction(nameof(Author));
         }
 
-
         public IActionResult LogOut()
         {
-
             HttpContext.Session.Clear();
             return RedirectToAction(nameof(Index));
         }
-
-
 
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

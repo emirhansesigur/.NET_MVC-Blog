@@ -10,7 +10,5 @@ namespace AdminBlog.Models{
         //[Required(ErrorMessage = "Lütfen Bir Kategori İsmi Giriniz...")]
         public string Name { get; set; }
         public int AuthorId { get; set; }
-        public string AuthorName { get; set; }
-
     }
 }

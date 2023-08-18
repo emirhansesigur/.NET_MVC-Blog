@@ -69,9 +69,16 @@ namespace AdminBlog
                     pattern: "/login",
                     defaults: new { controller = "Home", action = "Index" });
                 endpoints.MapControllerRoute(
-                    name: "default",
+                    name: "default2",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
 
+                //endpoints.MapControllerRoute(
+                //    name: "admin",
+                //    pattern: "admin/{controller=Home}/{action=Index}/{id?}"
+                //    //defaults: new { },
+                //    //constraints: new { },
+                //    //dataTokens: new { area = "Admin" }
+                //    );
             });
 
         }

@@ -1,9 +1,11 @@
 ﻿using AdminBlog.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -27,20 +29,21 @@ namespace AdminBlog.Controllers
             //_userManager = userManager;
         }
 
-
+        //[Authorize(Roles = "SuperAdmin")]
         public IActionResult Index()
         {
-            var id = HttpContext.Session.GetInt32("Id");
+            //var id = HttpContext.Session.GetInt32("Id");
             var superadmin = HttpContext.Session.GetString("superAdmin");
-            if (id.HasValue)
-            {
-                var categories = _context.Category
-                        .Where(category => category.AuthorId == id)
-                        .ToList();
-                return View(categories);
+            //if (id.HasValue)
+            //{
+            //    var categories = _context.Category
+            //            .Where(category => category.AuthorId == id)
+            //            .ToList();
+            //    return View(categories);
 
-            }
-            else if (superadmin == "superAdmin")
+            //}
+            //else 
+            if (superadmin == "superAdmin")
             {
                 // eger superadmin giris yaptiysa hepsini dondur
                 var categories = _context.Category.ToList();
@@ -56,7 +59,7 @@ namespace AdminBlog.Controllers
 
         }
 
-
+        //[Authorize(Roles = "SuperAdmin")]
         public async Task<IActionResult> AddCategory(Category category)
         {
 
@@ -88,7 +91,7 @@ namespace AdminBlog.Controllers
             return Json(true);
         }
 
-        //[Authorize]
+        //[Authorize(Roles = "SuperAdmin")]
         public IActionResult Category()
         {
             var list = _context.Category.FromSqlRaw("SELECT * FROM Category").ToList();
@@ -103,6 +106,7 @@ namespace AdminBlog.Controllers
         }
 
         //<a class="btn btn-danger" asp-route-id="@item.Id" asp-action="DeleteCategory">Sil</a>
+        //[Authorize(Roles = "SuperAdmin")]
         public async Task<IActionResult> DeleteCategory(int? Id)
         {
             var sql = "DELETE FROM Category WHERE Id = @Id";
@@ -112,7 +116,9 @@ namespace AdminBlog.Controllers
             return RedirectToAction(nameof(Index));
         } //ExecuteSqlRawAsync: Bu, _context.Database üzerinde yer alan bir metoddur ve verilen SQL ifadesini doğrudan veritabanında yürütür. 
           //@Id yerine geçerli Id değerini kullanmayı sağlar. Bu şekilde, SQL enjeksiyon saldırılarına karşı güvenli bir şekilde çalışmayı sağlar.
+        
 
+        //[Authorize(Roles = "SuperAdmin")]
         public async Task<IActionResult> UpdateCategory(int? Id, string Name) // burada kaldık
         {
             // eski kayıtlarla ile aynıysa güncelleME !!

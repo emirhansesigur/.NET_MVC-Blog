@@ -33,51 +33,59 @@ namespace AdminBlog.Controllers
             _webHostEnvironment = webHostEnvironment;
         }
 
-
+        //[Authorize(Roles = "SuperAdmin, Admin")]
         public IActionResult Index() // tum bloglar listelenir
         {
-            if (HttpContext.Session.GetString("superAdmin") != "superAdmin")
+            var id = HttpContext.Session.GetInt32("Id");
+
+
+            if (HttpContext.Session.GetString("superAdmin") != "superAdmin" && id == null)
             {
                 //var list = _context.Blog.ToList();    
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Forbidden", "Error");
             }
 
-            var list = _context.Blog.ToList();
+            List<Blog> list;
+
+            if (HttpContext.Session.GetString("superAdmin") == "superAdmin")
+            {
+                list = _context.Blog.ToList();
+            }
+            else
+            {
+                list = _context.Blog.Where(blog => blog.AuthorId == id).ToList(); //Admin ise bu kullanılır.
+            }
+
             return View(list);
         }
 
-        public IActionResult UsersBlogs()
-        {
-            var id = HttpContext.Session.GetInt32("Id");
-            if (id == null)
-            {
-                //var list = _context.Blog.ToList();    
-                return RedirectToAction("Index", "Home");
-            }
 
-            //var list = _context.Blog.ToList();
-            var userBlogs = _context.Blog.Where(blog => blog.AuthorId == id).ToList();
-
-            return View(userBlogs);
-        }
-
+        //[Authorize(Roles = "SuperAdmin, Admin")]
         public IActionResult Publish(int Id) // yayinlama islemini tersine cevirir.
         {
+            var id = HttpContext.Session.GetInt32("Id");
+            if (HttpContext.Session.GetString("superAdmin") != "superAdmin" && id == null)
+            {
+                //var list = _context.Blog.ToList();    
+                return RedirectToAction("Forbidden", "Error");
+            }
+
             var blog = _context.Blog.Find(Id);
 
             blog.IsPublish = !(blog.IsPublish);
             _context.Update(blog);
             _context.SaveChanges();
-            return RedirectToAction(nameof(UsersBlogs));
+            return RedirectToAction(nameof(Index));
         }
 
+        //[Authorize(Roles = "Admin")]
         public IActionResult Add() // Categories'e gonderiliyor.
         {
             var id = HttpContext.Session.GetInt32("Id");
             if (id == null)
             {
                 //var list = _context.Blog.ToList();    
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Forbidden", "Error");
             }
 
             List<SelectListItem> values = _context.Category.Select(w =>
@@ -91,9 +99,17 @@ namespace AdminBlog.Controllers
             return View();
         }
 
+        //[Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> Add(Blog model) // Category.Id elimizde. 
         {
+            var id = HttpContext.Session.GetInt32("Id");
+            if (id == null)
+            {
+                //var list = _context.Blog.ToList();    
+                return RedirectToAction("Forbidden", "Error");
+            }
+
             // Category ismini de elde etmemiz gerekiyor.
             var foundCategory = _context.Category.Find(model.CategoryId);
 
@@ -167,10 +183,17 @@ namespace AdminBlog.Controllers
         //    return Json(false);
         //}
 
-
-        public async Task<IActionResult> DeleteBlog(int id)
+        //[Authorize(Roles = "SuperAdmin, Admin")]
+        public async Task<IActionResult> DeleteBlog(int id2)
         {
-            var blogToDelete = await _context.Blog.FindAsync(id);
+            var id = HttpContext.Session.GetInt32("Id");
+            if (HttpContext.Session.GetString("superAdmin") != "superAdmin" || id == null)
+            {
+                //var list = _context.Blog.ToList();    
+                return RedirectToAction("Forbidden", "Error");
+            }
+
+            var blogToDelete = await _context.Blog.FindAsync(id2);
 
             if (blogToDelete == null)
             {

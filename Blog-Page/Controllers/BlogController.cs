@@ -18,9 +18,14 @@ namespace BlogNET.Controllers
 
         public IActionResult Index()
         {
+            var categories = _context.Category.ToList();
+            ViewBag.categories = categories;
 
-            var bloglar = _context.Blog.FromSqlRaw("SELECT * FROM Blog").ToList();
-            return View(bloglar);
+            var blogs = _context.Blog
+                    .OrderByDescending(b => b.CreateTime)
+                    .ToList();
+
+            return View(blogs);
         }
 
         public IActionResult Detials(int Id)
