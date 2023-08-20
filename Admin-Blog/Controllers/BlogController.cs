@@ -37,7 +37,7 @@ namespace AdminBlog.Controllers
         public IActionResult Index() // tum bloglar listelenir
         {
             var id = HttpContext.Session.GetInt32("Id");
-
+            
 
             if (HttpContext.Session.GetString("superAdmin") != "superAdmin" && id == null)
             {

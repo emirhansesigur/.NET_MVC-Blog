@@ -44,7 +44,7 @@ namespace BlogNET.Controllers
         //    return View();
         //}
 
-        [HttpPost]  
+        [HttpPost]
         public async Task<IActionResult> Index(Author model) // home login e gidiyor. o yüzden düzeltmeler yappp.
         {
             using (SHA256 sha256 = SHA256.Create())
@@ -74,14 +74,19 @@ namespace BlogNET.Controllers
 
                 var author = await _context.Author.FromSqlRaw(query, emailParam, passwordParam).FirstOrDefaultAsync();
 
-                if (author != null)
+                if (author == null)
                 {
-                    //var token = Generate(author);
-                    //HttpContext.Session.SetString("token", token);
                     return RedirectToAction("Index");
                 }
-
-                return NotFound("User Not Found");
+                else if (author.Role == "SuperAdmin")
+                {
+                    HttpContext.Session.SetString("superAdmin", "superAdmin");
+                    return RedirectToAction("Index", "Blog");
+                }
+                //var token = Generate(author);
+                //HttpContext.Session.SetString("token", token);
+                HttpContext.Session.SetInt32("Id", author.Id);
+                return RedirectToAction("Index", "AdminBlog");
             }
         }
 

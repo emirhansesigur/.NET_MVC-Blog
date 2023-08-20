@@ -71,7 +71,7 @@ namespace BlogNET
         {
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
+                app.UseDeveloperExceptionPage();    
             }
             else
             {
@@ -88,7 +88,6 @@ namespace BlogNET
             app.UseAuthentication();
 
             app.UseSession(); // SESSION ICIN EKLE
-
 
             app.UseEndpoints(endpoints =>
             {

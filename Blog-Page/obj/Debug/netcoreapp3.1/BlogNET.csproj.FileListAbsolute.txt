@@ -285,4 +285,4 @@ C:\Users\Emir\Desktop\BLOG\Blog-Page\bin\Debug\netcoreapp3.1\System.Text.Encodin
 C:\Users\Emir\Desktop\BLOG\Blog-Page\bin\Debug\netcoreapp3.1\System.Text.Json.dll
 C:\Users\Emir\Desktop\BLOG\Blog-Page\obj\Debug\netcoreapp3.1\Razor\Views\Login\Super.cshtml.g.cs
 C:\Users\Emir\Desktop\BLOG\Blog-Page\bin\Debug\netcoreapp3.1\libman.json
-C:\Users\Emir\Desktop\BLOG\Blog-Page\obj\Debug\netcoreapp3.1\Razor\Views\Admin\Home.cshtml.g.cs
+C:\Users\Emir\Desktop\BLOG\Blog-Page\obj\Debug\netcoreapp3.1\Razor\Views\AdminBlog\Index.cshtml.g.cs
