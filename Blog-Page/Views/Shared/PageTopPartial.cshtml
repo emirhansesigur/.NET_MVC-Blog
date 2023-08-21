@@ -1,13 +1,36 @@
-﻿<div class="col-md-4 top-forms text-center mt-lg-3 mt-md-1 mt-0">
-    <span>Hoşgeldin... @*__kullanici_adi*@ </span>
-    <span class="mx-lg-4 mx-md-2  mx-1">
-        <a href="/login">
-            <i class="fas fa-lock"></i> Giriş Yap
-        </a>
-    </span>
-    <span>
-        <a href="/register">
-            <i class="far fa-user"></i> Kaydol
-        </a>
-    </span>
+﻿@using Microsoft.AspNetCore.Http;
+
+@{
+    int? id = Context.Session.GetInt32("Id");
+    string superAdmin = Context.Session.GetString("superAdmin");
+}
+
+<div class="col-md-4 top-forms text-center mt-lg-3 mt-md-1 mt-0">
+
+    @if (id.HasValue || (superAdmin == "superAdmin")) // biri varsa
+    {
+        <span>Hoşgeldin... @superAdmin @*__kullanici_adi*@ </span>
+    }
+
+
+    @if (id.HasValue == false && (superAdmin != "superAdmin")) // ikisi de yoksa
+    {
+        <span class="mx-lg-4 mx-md-2  mx-1">
+            <a href="/login">
+                <i class="fas fa-lock"></i> Giriş Yap
+            </a>
+        </span>
+        <span>
+            <a href="/register">
+                <i class="far fa-user"></i> Kaydol
+            </a>
+        </span>
+    }
+
+    @if (id.HasValue || (superAdmin == "superAdmin"))
+    {
+
+        <a href="/Home/LogOut" class="btn btn-secondary">Çıkış Yap</a>
+
+    }
 </div>

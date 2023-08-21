@@ -13,41 +13,48 @@
                 <div class="row">
                     @foreach (var x in Model)
                     {
-                        <div class="col-lg-4 card">
-                            <a href="/Blog/Detials/@x.Id">
-                                <img src="@x.ImagePath" class="card-img-top img-fluid" alt="Blog Fotoğrafı">
-                            </a>
-                            <div class="card-body">
-                                <ul class="blog-icons my-4">
-                                    <li>
-                                        <a href="#">
-                                            <i class="far fa-calendar-alt"></i> @x.CreateTime.ToShortDateString()
-                                        </a>
-                                    </li>
-                                    <li class="mx-2">
-                                        <a href="#">
-                                            <i class="far fa-comment"></i> 21
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <i class="fas fa-eye"></i> 2000
-                                        </a>
-                                    </li>
-
-                                </ul>
-                                <h5 class="card-title">
-                                    <a href="/Blog/Detials/@x.Id">@x.Title</a>
-                                </h5>
-                                @if (x.Content != null)
-                                {
-                                    @*<span class="card-text mb-3">@Html.Raw(x.Content.Length <= 50 ? x.Content : x.Content.Substring(0, 50))</span>*@
-                                    <span class="card-text mb-3">@x.Subtitle</span>
-                                }
-                                @*<p class="card-text mb-3">@Html.Raw(@x.Content)</p>*@
-                                <a href="/Blog/Detials/@x.Id" class="btn btn-primary read-m">Okumak İçin Tıklayın</a>
+                        if (x.IsPublish)
+                        {
+                            <div class="col-lg-4 card">
+                                <a href="/Blog/Details/@x.Id">
+                                    <img src="@x.ImagePath" class="card-img-top img-fluid" alt="Blog Fotoğrafı">
+                                </a>
+                                <div class="card-body">
+                                    <ul class="blog-icons my-4">
+                                        <li>
+                                            <a href="#">
+                                                <i class="far fa-calendar-alt"></i> @x.CreateTime.ToShortDateString()
+                                            </a>
+                                        </li>
+                                        <li class="mx-2">
+                                            <a href="#">
+                                                <i class="far fa-comment"></i> 21
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#">
+                                                <i class="fas fa-eye"></i> 2000
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#">
+                                                <i class="fas fa-user"></i>@x.AuthorId -> user ı görüntüle
+                                            </a>
+                                        </li>
+                                    </ul>
+                                    <h5 class="card-title">
+                                        <a href="/Blog/Details/@x.Id">@x.Title</a>
+                                    </h5>
+                                    @if (x.Content != null)
+                                    {
+                                        @*<span class="card-text mb-3">@Html.Raw(x.Content.Length <= 50 ? x.Content : x.Content.Substring(0, 50))</span>*@
+                                        <span class="card-text mb-3">@x.Subtitle</span>
+                                    }
+                                    @*<p class="card-text mb-3">@Html.Raw(@x.Content)</p>*@
+                                    <a href="/Blog/Details/@x.Id" class="btn btn-primary read-m">Okumak İçin Tıklayın</a>
+                                </div>
                             </div>
-                        </div>
+                        }
                     }
                 </div>
 

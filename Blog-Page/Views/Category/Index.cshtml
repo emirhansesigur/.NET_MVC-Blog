@@ -1,0 +1,193 @@
+﻿@using Microsoft.AspNetCore.Http;
+@model IEnumerable<BlogNET.Models.Category>
+
+@{
+    ViewData["Title"] = "Category";
+    Layout = "~/Views/Shared/_UserLayout.cshtml";
+}
+
+<button type="button" onclick="$('#CategoryModal').modal('show')" class="btn btn-primary">Kategori Ekle</button>
+
+<table class="table table-hover">
+    <thead>
+    <th scope="col">Id</th>
+    <th scope="col">Name</th>
+    <th scope="col"></th>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <th scope="row">@item.Id</th>
+                <td>@item.Name</td>
+                <td>
+                    <a class="btn btn-danger" asp-route-id="@item.Id" asp-controller="Category" asp-action="DeleteCategory">Sil</a> @* TAG HELPER *@
+                    <button class="btn btn-secondary" onclick="updateForm(@item.Id)" type="button">Güncelle</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="modal" id="CategoryModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Buradan Kategori Eklenir :</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form autocomplete="off">
+                <div class="modal-body">
+                    <div class="form-group">
+                        @*name = "Id" olarak değil de model gönderecek şekilde yap.*@
+                        <input type="hidden" name="Id" id="Id" class="form-control">
+                        <input type="text" name="Name" id="Name" class="form-control">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="clearForm()" data-dismiss="modal">KAPATT</button>
+                    <button type="button" onclick="addCategory(); clearForm();" id="saveBtn" class="btn btn-primary" data-dismiss="modal">EKLEE</button>
+                    <button id="updateBtn" class="btn btn-primary" data-dismiss="modal">GÜNCELLEE</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+@section Scripts{
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+
+
+        $(() => clearForm())
+        function updateForm(Id) {
+            fetch('/Category/CategoryDetails?Id=' + Id) /*fetch() fonksiyonu ile sunucudan veri almak için bir GET isteği gönderir*/
+                .then(res => res.json()) /*.then(res => res.json()) ifadesi, isteğin yanıtını JSON formatında ayrıştırmak i*/
+                .then(res => {
+                    $('#Id').val(res.id)
+                    $('#Name').val(res.name)
+                })
+            $('#saveBtn').hide();
+            $('#updateBtn').show();
+            $('#CategoryModal').modal('show');
+        }
+        function clearForm() {
+            $('#Id').val(null)
+            $('#Name').val(null)
+            $('#saveBtn').show();
+            $('#updateBtn').hide();
+        }
+        function addForm() {
+            $('#updateBtn').hide();
+        }
+
+        $('#updateBtn').click(function () {
+            var name = document.getElementById("Name").value;
+
+            if (name == "") {
+                swal.fire({
+                    icon: 'error',
+                    title: 'Hata!',
+                    text: 'Lütfen isim alanları doldurunuz.',
+                    confirmButtonText: 'Tamam'
+                });
+            }
+
+            $.ajax({
+                type: "POST",
+                dataType: 'json',
+                url: "@Url.Action("UpdateCategory", "Category")",
+                cache: false,
+                data: {
+                    Id: $("#Id").val(),
+                    Name: $("#Name").val()
+                }
+            });
+        });
+
+
+        $('#denemebtn').click(function () {
+            swal.fire({
+                icon: 'error',
+                title: 'Hata!',
+                text: 'Lütfen isim alanları doldurunuz.',
+                confirmButtonText: 'Tamam'
+            });
+        });
+
+        function addCategory() {
+            var name = document.getElementById("Name").value;
+
+            if (name == "") {
+                swal.fire({
+                    icon: 'error',
+                    title: 'Hata!',
+                    text: 'Lütfen isim alanları doldurunuz.',
+                    confirmButtonText: 'Tamam'
+                }).then(function () {
+                    $('#CategoryModal').modal('show');
+                });
+            }
+
+            $.ajax({
+                type: "post",
+                dataType: 'json',
+                url: "@Url.Action("AddCategory", "Category")",
+                cache: false,
+                data: { Name: name },
+                success: function (data) {
+                    console.log(data);
+                    if (data) {
+                        Swal.fire('Category ekleme islemi basarili')
+                            .then(function () {
+                                location.reload();
+                            });
+                    }
+                    else {
+                        swal.fire({
+                            icon: 'error',
+                            title: 'Hata!',
+                            text: 'Aynı Category İsminden giris yaptiniz.',
+                            confirmButtonText: 'Tamam'
+                        }).then(function () {
+                            $('#CategoryModal').modal('show');
+                        });
+                    }
+                }//,
+                //error: function (xhr, status, error) {
+                //    // AJAX isteği başarısız oldu.
+                //    //console.log("Hata! Durum kodu:", xhr.status);
+                //    //console.log("Hata mesajı:", error);
+                //    Swal.fire({
+                //        icon: 'error',
+                //        title: 'Oops...',
+                //        text: 'Something went wrong!'
+                //    })
+                //}
+            });
+        }
+
+                                                                                 //$('#saveBtn').click(function () {
+                                                                                 //    $.ajax({
+                                                                                 //        type: "POST",
+                                                                                 //        dataType: 'json',
+                                                                                 
+                                                                                 //        cache: false,
+                                                                                 //        data: {
+                                                                                 //            Id: $("#Id").val(),
+                                                                                 //            Name: $("#Name").val()
+                                                                                 //        }
+                                                                                 //    });
+                                                                                 //});
+
+    </script>
+}
+

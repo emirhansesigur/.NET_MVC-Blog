@@ -1,0 +1,232 @@
+﻿@model IEnumerable<BlogNET.Models.Author>
+
+@{
+    ViewData["Title"] = "View";
+    Layout = "~/Views/Shared/_UserLayout.cshtml";
+}
+
+
+<button type="button" onclick="addForm(); $('#AuthorModal').modal('show'); clearForm();" class="btn btn-primary">Admin Ekle</button>
+
+<table class="table table-hover">
+    <thead>
+    <th scope="col">Id</th>
+    <th scope="col">Name</th>
+    <th scope="col">Surname</th>
+    <th scope="col">Email</th>
+    <th scope="col">Parola-YAP</th>
+    <th scope="col"></th>
+    </thead>
+
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <th scope="row">@item.Id</th>
+                <td>@item.Name</td>
+                <td>@item.Surname</td>
+                <td>@item.Email</td>
+                @*<td>@item.Password</td>*@
+                <td>
+                    <a class="btn btn-danger" asp-route-id="@item.Id" asp-controller="Author" asp-action="DeleteAuthor">Sil</a>
+                    <button class="btn btn-secondary" id="Update" onclick="updateForm(@item.Id)" type="button">Güncelle</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="modal" id="AuthorModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Yazar :</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form autocomplete="off">
+                <div class="modal-body">
+                    Ad:
+                    <div class="form-group">
+                        <input type="hidden" name="Id" id="Id" class="form-control">
+                        <input type="text" name="Name" id="Name" class="form-control" placeholder="Ad">
+                    </div>
+                    <div class="form-group">
+                        Soyad:
+                        <input type="text" name="Surname" id="Surname" class="form-control" placeholder="Soyad">
+                    </div>
+                    <div class="form-group">
+                        Email:
+                        <input type="text" name="Email" id="Email" class="form-control" placeholder="Email">
+                    </div>
+                    <div class="form-group">
+                        <div id="Password2">Parola: </div>
+                        <input type="password" name="Password" id="Password" class="form-control" placeholder="Parola">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="clearForm()" data-dismiss="modal">KAPAT</button>
+                    <button type="button" id="saveBtn" onclick="Save()" class="btn btn-primary" data-dismiss="modal">EKLE</button>
+                    <button type="submit" id="updateBtn" class="btn btn-primary">GUNCELLE</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts{
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+
+        $(clearForm())
+        function updateForm(Id) {
+            var error = false;
+
+            // 2 tane then işlemi biraz karışık. tekrar bal
+
+            //var name = document.getElementById("Name").value;
+
+            fetch(`/Author/AuthorDetails?Id=${Id}`)
+                .then(res => res.json())
+                .then(res => {
+                    $('#Id').val(res.id)
+                    $('#Name').val(res.name)
+                    $('#Surname').val(res.surname)
+                    //$('#Password').val(res.password)
+                    $('#Email').val(res.email)
+                })
+            //.then(function () {
+            //    // Sayfanın yenilenmesini sağlamak için refreshBtn butonuna tıklama olayı ekliyoruz
+            //    $('#refreshBtn').on('click', function () {
+            //        location.reload();
+            //    });
+            //});
+
+            $('#saveBtn').hide();
+            //$('#saveBtn').show();
+            $('#updateBtn').show();
+            $('#AuthorModal').modal('show');
+            $('#Password, #Password2').hide();
+        }
+
+        function Save() {
+            var id = document.getElementById("Id").value;
+            var name = document.getElementById("Name").value;
+            var surname = document.getElementById("Surname").value;
+            var email = document.getElementById("Email").value;
+            var password = document.getElementById("Password").value;
+
+            var emailReg = /^([\w-\.]+@@([\w-]+\.)+[\w-]{2,4})?$/;
+
+            if (name == "" || surname == "" || email == "" || password == "") {
+                swal.fire({
+                    icon: 'error',
+                    title: 'Hata!',
+                    text: 'Lütfen boş alan bırakmayınız.',
+                    confirmButtonText: 'Tamam'
+                }).then(function () {
+                    $('#AuthorModal').modal('show');
+                });
+            }
+            else if (!emailReg.test(email)) {
+                swal.fire({
+                    icon: 'error',
+                    title: 'Hata!',
+                    text: 'Hatalı Email Formu.',
+                    confirmButtonText: 'Tamam'
+                }).then(function () {
+                    $('#AuthorModal').modal('show');
+                });
+            }
+
+            else {
+                $.ajax({
+                    type: "POST",
+                    dataType: 'json',
+                    url: "@Url.Action("AddAuthor", "Author")",
+                    data: {
+                        Id: id,
+                        Name: name,
+                        Surname: surname,
+                        Email: email,
+                        Password: password
+                    },
+                    success: function (data) {
+                        if (data) {
+                            swal.fire({
+                                icon: 'success',
+                                title: 'Basarili!',
+                                text: 'Kayıt işlemi başarılı..',
+                                confirmButtonText: 'Tamam'
+                            }).then(function () {
+                                location.reload(); // son eklenen verilerin de gozukmesi için sayfayi yenileriz
+                            });
+                        }
+                        else {
+                            swal.fire({
+                                icon: 'error',
+                                title: 'Hata!',
+                                text: 'Bir hata olustu.',
+                                confirmButtonText: 'Tamam'
+                            }).then(function () {
+                                $('#AuthorModal').modal('show');
+                            });
+                        }
+                    }
+                });
+
+            }
+
+        }
+
+
+        $('#updateBtn').click(function () {
+            $.ajax({
+                type: "POST",
+                dataType: 'json',
+                url: "@Url.Action("UpdateAuthor", "Author")",
+                cache: false,
+                data: {
+                    Id: $("#Id").val(),
+                    Name: $("#Name").val(),
+                    Surname: $("#Surname").val(),
+                    Email: $("#Email").val()/*,*/
+                    //Password: $("#Password").val()
+                },
+                success: function (data) {
+                    //if (data.Redirect) {
+                    //    console.log("yazar mi??");
+                    //    window.location.href = data.RedirectUrl
+                    //}
+                    if (data === true) { // buralar neden calismiyor ?????
+                        alert("update btn basarili")
+                    }
+                    else {
+                        alert("update btn BASARISIZ")
+                    }
+                }
+            });
+        });
+
+        function addForm() {
+            $('#Password, #Password2').show();
+            $('#updateBtn').hide();
+            $('#saveBtn').show();
+        }
+
+        function clearForm() {
+            $('#Id').val(null)
+            $('#Name').val(null)
+            $('#Surname').val(null)
+            $('#Password').val(null)
+            $('#Email').val(null)
+            $('#saveBtn').show();
+            $('#updateBtn').hide();
+        }
+
+    </script>
+}

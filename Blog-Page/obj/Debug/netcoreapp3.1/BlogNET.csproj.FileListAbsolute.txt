@@ -227,7 +227,6 @@ C:\Users\Emir\Desktop\BLOG\Blog-Page\obj\Debug\netcoreapp3.1\Razor\Views\Shared\
 C:\Users\Emir\Desktop\BLOG\Blog-Page\obj\Debug\netcoreapp3.1\Razor\Views\Shared\FooterPartial.cshtml.g.cs
 C:\Users\Emir\Desktop\BLOG\Blog-Page\obj\Debug\netcoreapp3.1\Razor\Views\Shared\HeaderPartial.cshtml.g.cs
 C:\Users\Emir\Desktop\BLOG\Blog-Page\obj\Debug\netcoreapp3.1\Razor\Views\Shared\PageTopPartial.cshtml.g.cs
-C:\Users\Emir\Desktop\BLOG\Blog-Page\obj\Debug\netcoreapp3.1\Razor\Views\Shared\_Layout.cshtml.g.cs
 C:\Users\Emir\Desktop\BLOG\Blog-Page\obj\Debug\netcoreapp3.1\Razor\Views\Shared\_UserLayout.cshtml.g.cs
 C:\Users\Emir\Desktop\BLOG\Blog-Page\obj\Debug\netcoreapp3.1\Razor\Views\Shared\_ValidationScriptsPartial.cshtml.g.cs
 C:\Users\Emir\Desktop\BLOG\Blog-Page\obj\Debug\netcoreapp3.1\Razor\Views\User\Index.cshtml.g.cs
@@ -272,7 +271,6 @@ C:\Users\Emir\Desktop\BLOG\Blog-Page\bin\Debug\netcoreapp3.1\runtimes\unix\lib\n
 C:\Users\Emir\Desktop\BLOG\Blog-Page\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp2.0\System.Runtime.Caching.dll
 C:\Users\Emir\Desktop\BLOG\Blog-Page\bin\Debug\netcoreapp3.1\runtimes\win\lib\netstandard2.0\System.Security.Cryptography.ProtectedData.dll
 C:\Users\Emir\Desktop\BLOG\Blog-Page\obj\Debug\netcoreapp3.1\Razor\Views\Blog\Index.cshtml.g.cs
-C:\Users\Emir\Desktop\BLOG\Blog-Page\obj\Debug\netcoreapp3.1\Razor\Views\Blog\Detials.cshtml.g.cs
 C:\Users\Emir\Desktop\BLOG\Blog-Page\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.Authentication.JwtBearer.dll
 C:\Users\Emir\Desktop\BLOG\Blog-Page\bin\Debug\netcoreapp3.1\Microsoft.IdentityModel.Abstractions.dll
 C:\Users\Emir\Desktop\BLOG\Blog-Page\bin\Debug\netcoreapp3.1\Microsoft.IdentityModel.JsonWebTokens.dll
@@ -286,3 +284,7 @@ C:\Users\Emir\Desktop\BLOG\Blog-Page\bin\Debug\netcoreapp3.1\System.Text.Json.dl
 C:\Users\Emir\Desktop\BLOG\Blog-Page\obj\Debug\netcoreapp3.1\Razor\Views\Login\Super.cshtml.g.cs
 C:\Users\Emir\Desktop\BLOG\Blog-Page\bin\Debug\netcoreapp3.1\libman.json
 C:\Users\Emir\Desktop\BLOG\Blog-Page\obj\Debug\netcoreapp3.1\Razor\Views\AdminBlog\Index.cshtml.g.cs
+C:\Users\Emir\Desktop\BLOG\Blog-Page\obj\Debug\netcoreapp3.1\Razor\Views\Error\Forbidden.cshtml.g.cs
+C:\Users\Emir\Desktop\BLOG\Blog-Page\obj\Debug\netcoreapp3.1\Razor\Views\Blog\Details.cshtml.g.cs
+C:\Users\Emir\Desktop\BLOG\Blog-Page\obj\Debug\netcoreapp3.1\Razor\Views\Author\Index.cshtml.g.cs
+C:\Users\Emir\Desktop\BLOG\Blog-Page\obj\Debug\netcoreapp3.1\Razor\Views\Category\Index.cshtml.g.cs

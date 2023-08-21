@@ -28,7 +28,7 @@ namespace BlogNET.Controllers
             return View(blogs);
         }
 
-        public IActionResult Detials(int Id)
+        public IActionResult Details(int Id) // parametre olarak alma.
         {
             var categoryNames = _context.Category.Select(c => c.Name).ToList();
             ViewBag.categoryNames = categoryNames.GetRange(0, 3);

@@ -1,4 +1,10 @@
-﻿
+﻿@using Microsoft.AspNetCore.Http;
+
+@{
+    int? id = Context.Session.GetInt32("Id");
+    string superAdmin = Context.Session.GetString("superAdmin");
+}
+
 
 <div class="header_top" id="home">
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -6,7 +12,6 @@
                 aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
@@ -19,29 +24,45 @@
                 <li class="nav-item">
                     <a class="nav-link" href="#">Hakkımızda</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" asp-action="Index" asp-controller="AdminBlog">Bloglar (A,S)</a>
-                </li>
+                @if (id.HasValue)
+                {
+                    <li class="nav-item">
+                        <a class="nav-link" asp-action="Index" asp-controller="AdminBlog">Blogların</a>
+                    </li>
+                }
+
                 <li class="nav-item">
                     <a class="nav-link" href="#">İletişim</a>
                 </li>
                 @*<li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="kategoriDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Kategoriler
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="kategoriDropdown">
-                        @{
-                            if (!string.IsNullOrEmpty(ViewBag.categories))
-                            {
-                                @foreach (var x in ViewBag.categories)
-                                {
-                                    <a class="dropdown-item" href="#">@x.Name</a>
-                                }
-                            }
-                        }
-                    </div>
+                <a class="nav-link dropdown-toggle" href="#" id="kategoriDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Kategoriler
+                </a>
+                <div class="dropdown-menu" aria-labelledby="kategoriDropdown">
+                @{
+                if (!string.IsNullOrEmpty(ViewBag.categories))
+                {
+                @foreach (var x in ViewBag.categories)
+                {
+                <a class="dropdown-item" href="#">@x.Name</a>
+                }
+                }
+                }
+                </div>
                 </li>*@
-
+                @if (superAdmin == "superAdmin")
+                {
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="kategoriDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Super Admin
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="kategoriDropdown">
+                            <a class="dropdown-item" asp-action="Index" asp-controller="Author">Kullanıcılar</a>
+                            <a class="dropdown-item" asp-action="Index" asp-controller="AdminBlog">Tüm Bloglar</a>
+                            <a class="dropdown-item" asp-action="Index" asp-controller="Category">Kategoriler</a>
+                        </div>
+                    </li>
+                }
             </ul>
             <form action="#" method="post" class="form-inline my-2 my-lg-0 header-search">
                 <input class="form-control mr-sm-2" type="search" placeholder="Aranacak Kelime..." name="Search" required="">
