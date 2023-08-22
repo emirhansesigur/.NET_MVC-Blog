@@ -44,7 +44,7 @@ namespace BlogNET.Models
 
             modelBuilder.Entity<Category>(entity =>
             {
-                entity.HasNoKey();
+                entity.HasKey(e => e.Id); // Id özelliğini anahtar olarak belirle
 
                 entity.Property(e => e.Id).ValueGeneratedOnAdd();
 

@@ -18,8 +18,8 @@ namespace BlogNET.Controllers
 
         public IActionResult Index()
         {
-            var categories = _context.Category.ToList();
-            ViewBag.categories = categories;
+            //var categories = _context.Category.ToList();
+            //ViewBag.categories = categories;
 
             var blogs = _context.Blog
                     .OrderByDescending(b => b.CreateTime)

@@ -48,8 +48,8 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" onclick="clearForm()" data-dismiss="modal">KAPATT</button>
-                    <button type="button" onclick="addCategory(); clearForm();" id="saveBtn" class="btn btn-primary" data-dismiss="modal">EKLEE</button>
-                    <button id="updateBtn" class="btn btn-primary" data-dismiss="modal">GÜNCELLEE</button>
+                    <button type="button" id="saveBtn" onclick="addCategory(); clearForm();" class="btn btn-primary" data-dismiss="modal">EKLEE</button>
+                    <button type="button" id="updateBtn" onclick="updateCategory()" class="btn btn-primary" data-dismiss="modal">GÜNCELLEE</button>
                 </div>
             </form>
         </div>
@@ -89,7 +89,8 @@
             $('#updateBtn').hide();
         }
 
-        $('#updateBtn').click(function () {
+
+        function updateCategory() {
             var name = document.getElementById("Name").value;
 
             if (name == "") {
@@ -109,19 +110,27 @@
                 data: {
                     Id: $("#Id").val(),
                     Name: $("#Name").val()
+                },
+                success: function (data) {
+                    if (data) {  // data true dönen bir şey
+                        Swal.fire('Category güncelleme islemi basarili')
+                            .then(function () {
+                                location.reload();
+                            });
+                    }
+                    else {
+                        swal.fire({
+                            icon: 'error',
+                            title: 'Hata!',
+                            text: 'İsim güncellemede bir sorun oluştu',
+                            confirmButtonText: 'Tamam'
+                        }).then(function () {
+                            $('#CategoryModal').modal('show');
+                        });
+                    }
                 }
             });
-        });
-
-
-        $('#denemebtn').click(function () {
-            swal.fire({
-                icon: 'error',
-                title: 'Hata!',
-                text: 'Lütfen isim alanları doldurunuz.',
-                confirmButtonText: 'Tamam'
-            });
-        });
+        }
 
         function addCategory() {
             var name = document.getElementById("Name").value;
@@ -144,8 +153,7 @@
                 cache: false,
                 data: { Name: name },
                 success: function (data) {
-                    console.log(data);
-                    if (data) {
+                    if (data) {  // data true dönen bir şey
                         Swal.fire('Category ekleme islemi basarili')
                             .then(function () {
                                 location.reload();
@@ -175,18 +183,18 @@
             });
         }
 
-                                                                                 //$('#saveBtn').click(function () {
-                                                                                 //    $.ajax({
-                                                                                 //        type: "POST",
-                                                                                 //        dataType: 'json',
-                                                                                 
-                                                                                 //        cache: false,
-                                                                                 //        data: {
-                                                                                 //            Id: $("#Id").val(),
-                                                                                 //            Name: $("#Name").val()
-                                                                                 //        }
-                                                                                 //    });
-                                                                                 //});
+                                                                                                         //$('#saveBtn').click(function () {
+                                                                                                         //    $.ajax({
+                                                                                                         //        type: "POST",
+                                                                                                         //        dataType: 'json',
+
+                                                                                                         //        cache: false,
+                                                                                                         //        data: {
+                                                                                                         //            Id: $("#Id").val(),
+                                                                                                         //            Name: $("#Name").val()
+                                                                                                         //        }
+                                                                                                         //    });
+                                                                                                         //});
 
     </script>
 }

@@ -34,13 +34,12 @@ namespace BlogNET.Controllers
             //            .Where(category => category.AuthorId == id)
             //            .ToList();
             //    return View(categories);
-
             //}
             //else 
             if (superadmin == "superAdmin")
             {
                 // eger superadmin giris yaptiysa hepsini dondur
-                var categories = _context.Category.ToList();
+                var categories = _context.Category.OrderBy(c => c.Id).ToList();
                 return View(categories);
             }
             else
@@ -61,11 +60,11 @@ namespace BlogNET.Controllers
             //}
 
 
-            var AuthorId = (int)HttpContext.Session.GetInt32("Id");
-            string authorName = _context.Author
-                        .Where(author => author.Id == AuthorId)
-                        .Select(author => author.Name)
-                        .FirstOrDefault();
+            //var AuthorId = (int)HttpContext.Session.GetInt32("Id");
+            //string authorName = _context.Author
+            //            .Where(author => author.Id == AuthorId)
+            //            .Select(author => author.Name)
+            //            .FirstOrDefault();
 
             var sql = "SELECT * FROM Category WHERE Name = @Name";
             var count = _context.Category.FromSqlRaw(sql, new SqlParameter("@Name", category.Name)).ToList();
@@ -102,25 +101,28 @@ namespace BlogNET.Controllers
         } //ExecuteSqlRawAsync: Bu, _context.Database üzerinde yer alan bir metoddur ve verilen SQL ifadesini doğrudan veritabanında yürütür. 
           //@Id yerine geçerli Id değerini kullanmayı sağlar. Bu şekilde, SQL enjeksiyon saldırılarına karşı güvenli bir şekilde çalışmayı sağlar.
 
-
         //[Authorize(Roles = "SuperAdmin")]
-        public async Task<IActionResult> UpdateCategory(int? Id, string Name) // burada kaldık
+        [HttpPost]
+        public async Task<IActionResult> UpdateCategory(int Id, string Name) // burada kaldık
         {
             // eski kayıtlarla ile aynıysa güncelleME !!
-            var sql = "SELECT * FROM Category WHERE Name = @Name";
-            var count = _context.Category.FromSqlRaw(sql, new SqlParameter("@Name", Name)).ToList();
 
+            //var sql = "SELECT * FROM Category WHERE Name = @Name";
+            //var count = _context.Category.FromSqlRaw(sql, new SqlParameter("@Name", Name)).ToList();
+            var same = _context.Category.FirstOrDefault(c => c.Name == Name);
 
-            if (count.Count() == 0) // yoksa guncellemek icin
+            if (same != null) // same bi degere sahipse
             {
-                var sqll = "UPDATE Category SET Name = @Name WHERE Id = @Id";
-                await _context.Database.ExecuteSqlRawAsync(sqll, new SqlParameter("@Id", Id), new SqlParameter("@Name", Name));
+                return Json(false);
             }
 
-            else // burada view e AYNISINDAN VAR mesajİ yazdir. 
-            { }
-
-            return RedirectToAction(nameof(Index));
+            var categoryToUpdate = await _context.Category.FirstOrDefaultAsync(c => c.Id == Id);
+            if (categoryToUpdate != null)
+            {
+                categoryToUpdate.Name = Name;
+                await _context.SaveChangesAsync();
+            }
+            return Json(true);
         }
 
 
