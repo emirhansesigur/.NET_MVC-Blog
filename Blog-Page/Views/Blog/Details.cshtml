@@ -43,6 +43,7 @@
 
                     <h3>
                         <h3>@Model.Title</h3>
+                        <h2>@Model.Subtitle</h2>
                     </h3>
                     <div class="blog-content">
                         @Html.Raw(@Model.Content)
@@ -107,7 +108,7 @@
                         </form>
 
                     </div>
-                    <div class="tech-btm">
+                    @*<div class="tech-btm">
                         <h4>Kategoriler</h4>
                         <ul class="list-group single">
                             @foreach (var x in ViewBag.categoryNames)
@@ -118,7 +119,7 @@
                                 </li>
                             }
                         </ul>
-                    </div>
+                    </div>*@
                     <div class="tech-btm">
                         <h4>Haftanın öne çıkan hikayeleri</h4>
 

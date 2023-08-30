@@ -1,17 +1,27 @@
-﻿@model IEnumerable<BlogNET.Models.Blog>
+﻿@using Microsoft.AspNetCore.Http;
+@model IEnumerable<BlogNET.Models.Blog>
+@inject BlogDbContext _context
 
 @{
     ViewData["Title"] = "AdminBlog Index";
     Layout = "~/Views/Shared/_UserLayout.cshtml";
+    string superAdmin = Context.Session.GetString("superAdmin");
 }
 
-<h5>superadmin kullanıcıya göre arama yapabilsin.</h5>
-<a class="btn btn-light">Kullanıcı Bul</a>
+
+<a class="btn btn-primary" asp-action="Add" asp-controller="Blog">Blog Ekle</a>
 <table class="table table-hover">
     <thead>
     <th scope="col">Id</th>
     <th scope="col">Blog Adı</th>
-    <th scope="col">Yazar Adı (supera de olsun)</th>
+        @{
+            if (superAdmin == "superAdmin")
+            {
+            <th scope="col">Yazar Adı superAdmin'de var</th>
+            }
+        }
+
+
     <th scope="col"></th>
     </thead>
     <tbody>
@@ -21,7 +31,21 @@
             <tr>
                 <th scope="row">@item.Id</th>
                 <td>@item.Title</td>
-                <td>@item.AuthorId</td>
+                @{
+                    if (superAdmin == "superAdmin")
+                    {
+                        var author = _context.Author.FirstOrDefault(a => a.Id == @item.AuthorId);
+
+                        @if (author != null)
+                        {
+                            <td>@author.Name</td>
+                        }
+                        else
+                        {
+                            <td>No author found</td>
+                        }
+                    }
+                }
                 <td>
                     <a class="btn btn-light">İçeriği Görüntüle</a>
                     @if (item.IsPublish)
@@ -75,10 +99,10 @@
                 $.ajax({
                     type: "POST",
                     url: "@Url.Action("DeleteBlog", "Blog")", // Silme işlemini gerçekleştiren Action metodunun URL'si
-                    data: { id: Id }, // Silinecek blogun Id'sini gönderiyoruz
-                    success: function (result) {
-                        if (result.success) {
+                    data: { id2: Id }, // Silinecek blogun Id'sini gönderiyoruz
 
+                    success: function (result) {
+                        if (result) {
                             Swal.fire(Id + " Numaralı Bloğu Silme İşlemi Başarılı.")
                                 .then(function () {
                                     location.reload();

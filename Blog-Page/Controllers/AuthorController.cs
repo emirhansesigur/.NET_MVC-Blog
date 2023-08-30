@@ -48,19 +48,60 @@ namespace BlogNET.Controllers
 
                 string hashedPassword = sb.ToString();
 
-                var sql = "INSERT INTO Author (Name, Surname, Email, Password) VALUES (@Name, @Surname, @Email, @Password)";
+                var sql = "INSERT INTO Author (Name, Surname, Email, Password, Role) VALUES (@Name, @Surname, @Email, @Password, @Role)";
 
                 var parameters = new List<SqlParameter>();
                 parameters.Add(new SqlParameter("@Name", author.Name));
                 parameters.Add(new SqlParameter("@Surname", author.Surname));
                 parameters.Add(new SqlParameter("@Email", author.Email));
                 parameters.Add(new SqlParameter("@Password", hashedPassword)); // Hashlenmiş parolayı kullan
+                parameters.Add(new SqlParameter("@Role", author.Role));
+
 
                 await _context.Database.ExecuteSqlRawAsync(sql, parameters);
 
                 return Json(true);
             }
 
+        }
+
+        //[Authorize(Roles = "SuperAdmin")]
+        [HttpPost]
+        public async Task<IActionResult> UpdateAuthor(Author author) // burada kaldık
+        {
+            if (HttpContext.Session.GetString("superAdmin") != "superAdmin")
+            {
+                //var list = _context.Blog.ToList();    
+                return RedirectToAction("Forbidden", "Error");
+            }
+
+            //var sqll = "UPDATE Author SET Name = @Name, Surname = @Surname, Email = @Email, Role = @Role  WHERE Id = @Id";
+
+            //var parameters = new List<SqlParameter>();
+            //parameters.Add(new SqlParameter("@Name", author.Name));
+            //parameters.Add(new SqlParameter("@Surname", author.Surname));
+            //parameters.Add(new SqlParameter("@Email", author.Email));
+            //parameters.Add(new SqlParameter("@Role", author.Role));
+            //parameters.Add(new SqlParameter("@Id", author.Id));
+
+            //await _context.Database.ExecuteSqlRawAsync(sqll, parameters);
+
+            var existingAuthor = await _context.Author.FindAsync(author.Id);
+
+            if (existingAuthor == null)
+            {
+                return NotFound(); // Varsayılan olarak 404 dönebilirsiniz.
+            }
+
+            existingAuthor.Name = author.Name;
+            existingAuthor.Surname = author.Surname;
+            existingAuthor.Email = author.Email;
+            existingAuthor.Role = author.Role;
+
+            await _context.SaveChangesAsync();
+
+
+            return Json(true);
         }
 
 
@@ -94,27 +135,7 @@ namespace BlogNET.Controllers
 
 
 
-        //[Authorize(Roles = "SuperAdmin")]
-        public async Task<IActionResult> UpdateAuthor(Author author) // burada kaldık
-        {
-            if (HttpContext.Session.GetString("superAdmin") != "superAdmin")
-            {
-                //var list = _context.Blog.ToList();    
-                return RedirectToAction("Forbidden", "Error");
-            }
 
-            var sqll = "UPDATE Author SET Name = @Name, Surname = @Surname, Email = @Email WHERE Id = @Id"; //, Password = @
-
-            var parameters = new List<SqlParameter>();
-            parameters.Add(new SqlParameter("@Name", author.Name));
-            parameters.Add(new SqlParameter("@Surname", author.Surname));
-            parameters.Add(new SqlParameter("@Email", author.Email));
-            //parameters.Add(new SqlParameter("@Password", author.Password));
-            parameters.Add(new SqlParameter("@Id", author.Id));
-            await _context.Database.ExecuteSqlRawAsync(sqll, parameters);
-
-            return RedirectToAction(nameof(Index));
-        }
 
 
 

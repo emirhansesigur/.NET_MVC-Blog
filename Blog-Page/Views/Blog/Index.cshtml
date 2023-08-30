@@ -1,4 +1,5 @@
 ﻿@model List<Blog>
+@inject BlogDbContext _context
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_UserLayout.cshtml";
@@ -17,7 +18,8 @@
                         {
                             <div class="col-lg-4 card">
                                 <a href="/Blog/Details/@x.Id">
-                                    <img src="@x.ImagePath" class="card-img-top img-fluid" alt="Blog Fotoğrafı">
+                                    @*<img src="@x.ImagePath" class="card-img-top img-fluid" alt="Blog Fotoğrafı">*@
+                                    <img src="@x.ImagePath" class="card-img-top img-fluid" alt="Blog Fotoğrafı" style="max-width: 100%; height: auto;">
                                 </a>
                                 <div class="card-body">
                                     <ul class="blog-icons my-4">
@@ -26,20 +28,26 @@
                                                 <i class="far fa-calendar-alt"></i> @x.CreateTime.ToShortDateString()
                                             </a>
                                         </li>
+
+                                        <li>
+                                            @{
+                                                var author = _context.Author.FirstOrDefault(a => a.Id == @x.AuthorId);
+                                                if (author != null)
+                                                {
+                                                    <a asp-controller="admin" asp-action="@author.Id">
+                                                        <i class="fas fa-user"></i>@author.Name
+                                                    </a>
+                                                }
+                                            }
+
+                                        </li>
                                         <li class="mx-2">
                                             <a href="#">
                                                 <i class="far fa-comment"></i> 21
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="#">
-                                                <i class="fas fa-eye"></i> 2000
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#">
-                                                <i class="fas fa-user"></i>@x.AuthorId -> user ı görüntüle
-                                            </a>
+                                            <i class="fas fa-eye"></i> 2000
                                         </li>
                                     </ul>
                                     <h5 class="card-title">

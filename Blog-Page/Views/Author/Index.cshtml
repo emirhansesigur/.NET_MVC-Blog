@@ -14,6 +14,7 @@
     <th scope="col">Name</th>
     <th scope="col">Surname</th>
     <th scope="col">Email</th>
+    <th scope="col">Rol</th>
     <th scope="col">Parola-YAP</th>
     <th scope="col"></th>
     </thead>
@@ -26,6 +27,7 @@
                 <td>@item.Name</td>
                 <td>@item.Surname</td>
                 <td>@item.Email</td>
+                <td>@item.Role</td>
                 @*<td>@item.Password</td>*@
                 <td>
                     <a class="btn btn-danger" asp-route-id="@item.Id" asp-controller="Author" asp-action="DeleteAuthor">Sil</a>
@@ -64,16 +66,22 @@
                         <div id="Password2">Parola: </div>
                         <input type="password" name="Password" id="Password" class="form-control" placeholder="Parola">
                     </div>
+                    <div class="form-group">
+                        <label for="selectOption">Seçenek:</label>
+                        <select id="Role" class="form-control">
+                            <option value="SuperAdmin">Super Admin</option>
+                            <option value="Admin">Admin</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" onclick="clearForm()" data-dismiss="modal">KAPAT</button>
                     <button type="button" id="saveBtn" onclick="Save()" class="btn btn-primary" data-dismiss="modal">EKLE</button>
-                    <button type="submit" id="updateBtn" class="btn btn-primary">GUNCELLE</button>
+                    <button type="submit" id="updateBtn" onclick="updateAuthorFun()" class="btn btn-primary">GÜNCELLE</button>
                 </div>
             </form>
         </div>
     </div>
-
 </div>
 
 @section Scripts{
@@ -82,14 +90,8 @@
 
     <script>
 
-        $(clearForm())
+
         function updateForm(Id) {
-            var error = false;
-
-            // 2 tane then işlemi biraz karışık. tekrar bal
-
-            //var name = document.getElementById("Name").value;
-
             fetch(`/Author/AuthorDetails?Id=${Id}`)
                 .then(res => res.json())
                 .then(res => {
@@ -99,13 +101,6 @@
                     //$('#Password').val(res.password)
                     $('#Email').val(res.email)
                 })
-            //.then(function () {
-            //    // Sayfanın yenilenmesini sağlamak için refreshBtn butonuna tıklama olayı ekliyoruz
-            //    $('#refreshBtn').on('click', function () {
-            //        location.reload();
-            //    });
-            //});
-
             $('#saveBtn').hide();
             //$('#saveBtn').show();
             $('#updateBtn').show();
@@ -119,6 +114,7 @@
             var surname = document.getElementById("Surname").value;
             var email = document.getElementById("Email").value;
             var password = document.getElementById("Password").value;
+            var role = document.getElementById("Role").value;
 
             var emailReg = /^([\w-\.]+@@([\w-]+\.)+[\w-]{2,4})?$/;
 
@@ -132,11 +128,12 @@
                     $('#AuthorModal').modal('show');
                 });
             }
+
             else if (!emailReg.test(email)) {
                 swal.fire({
                     icon: 'error',
                     title: 'Hata!',
-                    text: 'Hatalı Email Formu.',
+                    text: 'Email hatası.',
                     confirmButtonText: 'Tamam'
                 }).then(function () {
                     $('#AuthorModal').modal('show');
@@ -153,7 +150,8 @@
                         Name: name,
                         Surname: surname,
                         Email: email,
-                        Password: password
+                        Password: password,
+                        Role: role
                     },
                     success: function (data) {
                         if (data) {
@@ -163,7 +161,7 @@
                                 text: 'Kayıt işlemi başarılı..',
                                 confirmButtonText: 'Tamam'
                             }).then(function () {
-                                location.reload(); // son eklenen verilerin de gozukmesi için sayfayi yenileriz
+                                location.reload();
                             });
                         }
                         else {
@@ -184,33 +182,74 @@
         }
 
 
-        $('#updateBtn').click(function () {
-            $.ajax({
-                type: "POST",
-                dataType: 'json',
-                url: "@Url.Action("UpdateAuthor", "Author")",
-                cache: false,
-                data: {
-                    Id: $("#Id").val(),
-                    Name: $("#Name").val(),
-                    Surname: $("#Surname").val(),
-                    Email: $("#Email").val()/*,*/
-                    //Password: $("#Password").val()
-                },
-                success: function (data) {
-                    //if (data.Redirect) {
-                    //    console.log("yazar mi??");
-                    //    window.location.href = data.RedirectUrl
-                    //}
-                    if (data === true) { // buralar neden calismiyor ?????
-                        alert("update btn basarili")
+        function updateAuthorFun() {
+
+            var id = document.getElementById("Id").value;
+            var name = document.getElementById("Name").value;
+            var surname = document.getElementById("Surname").value;
+            var email = document.getElementById("Email").value;
+            var role = document.getElementById("Role").value;
+
+            var emailReg = /^([\w-\.]+@@([\w-]+\.)+[\w-]{2,4})?$/;
+
+            if (name == "" || surname == "" || email == "") {
+                swal.fire({
+                    icon: 'error',
+                    title: 'Hata!',
+                    text: 'Lütfen boş alan bırakmayınız.',
+                    confirmButtonText: 'Tamam'
+                }).then(function () {
+                    $('#AuthorModal').modal('show');
+                });
+            } else if (!emailReg.test(email)) {
+                swal.fire({
+                    icon: 'error',
+                    title: 'Hata!',
+                    text: 'Email hatası.',
+                    confirmButtonText: 'Tamam'
+                }).then(function () {
+                    $('#AuthorModal').modal('show');
+                });
+            }
+            else {
+                $.ajax({
+                    type: "POST",
+                    dataType: 'json',
+                    url: "@Url.Action("UpdateAuthor", "Author")",
+                    data: {
+                        Id: id,
+                        Name: name,
+                        Surname: surname,
+                        Role: role,
+                        Email: email
+                    },
+                    success: function (data) {
+                        if (data) {
+                            swal.fire({
+                                icon: 'success',
+                                title: 'Basarili!',
+                                text: 'Kayıt işlemi başarılı..',
+                                confirmButtonText: 'Tamam'
+                            })
+                        }
+                        else {
+                            swal.fire({
+                                icon: 'error',
+                                title: 'Hata!',
+                                text: 'Bir hata olustu.',
+                                confirmButtonText: 'Tamam'
+                            }).then(function () {
+                                $('#AuthorModal').modal('show');
+                            });
+                        }
                     }
-                    else {
-                        alert("update btn BASARISIZ")
-                    }
-                }
-            });
-        });
+
+                });
+            }
+
+
+
+        }
 
         function addForm() {
             $('#Password, #Password2').show();
@@ -230,3 +269,4 @@
 
     </script>
 }
+
