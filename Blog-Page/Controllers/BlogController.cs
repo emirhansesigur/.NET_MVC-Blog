@@ -172,10 +172,23 @@ namespace BlogNET.Controllers
             await _context.SaveChangesAsync();
             // Silme işlemi başarılı olduğunda HTTP 200 (OK) döndürün
             return Ok(new { success = true });
-
-
         }
 
+        //[Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Comment()
+        {
+            var id = HttpContext.Session.GetInt32("Id");
+            if (id == null)
+            {
+                return RedirectToAction("Forbidden", "Error");
+            }
+
+
+
+
+            await _context.SaveChangesAsync();
+            return Json(true);
+        }
 
 
 

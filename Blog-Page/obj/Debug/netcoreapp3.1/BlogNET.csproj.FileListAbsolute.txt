@@ -220,7 +220,6 @@ C:\Users\Emir\Desktop\BLOG\Blog-Page\obj\Debug\netcoreapp3.1\BlogNET.TagHelpers.
 C:\Users\Emir\Desktop\BLOG\Blog-Page\obj\Debug\netcoreapp3.1\BlogNET.TagHelpers.output.cache
 C:\Users\Emir\Desktop\BLOG\Blog-Page\obj\Debug\netcoreapp3.1\BlogNET.RazorCoreGenerate.cache
 C:\Users\Emir\Desktop\BLOG\Blog-Page\obj\Debug\netcoreapp3.1\Razor\Views\Home\Index.cshtml.g.cs
-C:\Users\Emir\Desktop\BLOG\Blog-Page\obj\Debug\netcoreapp3.1\Razor\Views\Home\Privacy.cshtml.g.cs
 C:\Users\Emir\Desktop\BLOG\Blog-Page\obj\Debug\netcoreapp3.1\Razor\Views\Login\Index.cshtml.g.cs
 C:\Users\Emir\Desktop\BLOG\Blog-Page\obj\Debug\netcoreapp3.1\Razor\Views\Register\Index.cshtml.g.cs
 C:\Users\Emir\Desktop\BLOG\Blog-Page\obj\Debug\netcoreapp3.1\Razor\Views\Shared\Error.cshtml.g.cs

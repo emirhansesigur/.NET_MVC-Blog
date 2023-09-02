@@ -44,7 +44,7 @@ namespace BlogNET.Controllers
             }
             else
             {
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Error", "Forbidden");
             }
             // eger admin giris yaptiysa sadece onun kategorilerini dondur
         }

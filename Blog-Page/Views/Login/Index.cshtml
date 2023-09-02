@@ -7,18 +7,18 @@
 <header>
     <section class="main-content-w3layouts-agileits">
         <div class="container">
-            <h3 class="tittle">Sign In Now</h3>
+            <h3 class="tittle">Şimdi Giriş Yap</h3>
             <div class="row inner-sec">
                 <div class="login p-5 bg-light mx-auto mw-100">
                     <form asp-action="Index" asp-controller="Login" method="post">
                         <div class="form-group">
-                            <label for="exampleInputEmail1 mb-2">Email address</label>
+                            <label for="exampleInputEmail1 mb-2">Email adresi</label>
                             <input type="email" asp-for="Email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Email">
-                            <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                            <small id="emailHelp" class="form-text text-muted">E-postanızı asla başkasıyla paylaşmayacağız.</small>
                             <span asp-validation-for="Email"></span>
                         </div>
                         <div class="form-group">
-                            <label for="exampleInputPassword1 mb-2">Password</label>
+                            <label for="exampleInputPassword1 mb-2">Şifre</label>
                             <input type="password" asp-for="Password" class="form-control" id="exampleInputPassword1" placeholder="Password">
                             <span asp-validation-for="Password" class="text-danger"></span>
 
@@ -27,8 +27,8 @@
                             <input type="checkbox" class="form-check-input" id="exampleCheck1">
                             <label class="form-check-label" for="exampleCheck1">Check me out</label>
                         </div>*@
-                        <button type="submit" class="btn btn-primary submit mb-4">Sign In</button>
-                        <p><a asp-action="Index" asp-controller="Register"> Don't have an account?</a></p>
+                        <button type="submit" class="btn btn-primary submit mb-4">Giriş Yap</button>
+                        <p><a asp-action="Index" asp-controller="Register">Bir hesabınız yok mu ?</a></p>
                     </form>
                 </div>
             </div>
