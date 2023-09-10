@@ -18,17 +18,23 @@ namespace BlogNET.Models
         public virtual DbSet<Author> Author { get; set; }
         public virtual DbSet<Blog> Blog { get; set; }
         public virtual DbSet<Category> Category { get; set; }
+        public virtual DbSet<Newsletter> Newsletter { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
                 optionsBuilder.UseSqlServer("Server=EMIR\\SQLEXPRESS01;Database=BlogDb;Integrated Security=True;");
-            } // Integrated Security=True; yerine User Id=sa;Password=1q2w3e diyebilirdik.
+            }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Author>(entity =>
+            {
+                entity.Property(e => e.Role).HasMaxLength(50);
+            });
+
             modelBuilder.Entity<Blog>(entity =>
             {
                 entity.HasIndex(e => e.AuthorId);
@@ -44,11 +50,20 @@ namespace BlogNET.Models
 
             modelBuilder.Entity<Category>(entity =>
             {
-                entity.HasKey(e => e.Id); // Id özelliğini anahtar olarak belirle
+                entity.HasNoKey();
 
                 entity.Property(e => e.Id).ValueGeneratedOnAdd();
 
                 entity.Property(e => e.Name).IsRequired();
+            });
+
+            modelBuilder.Entity<Newsletter>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.Property(e => e.Email).IsRequired();
+
+                entity.Property(e => e.Id).ValueGeneratedOnAdd();
             });
 
             OnModelCreatingPartial(modelBuilder);

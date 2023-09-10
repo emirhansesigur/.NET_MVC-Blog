@@ -7,7 +7,7 @@
 <header>
     <section class="main-content-w3layouts-agileits">
         <div class="container">
-            <h3 class="tittle">Şimdi Giriş Yap</h3>
+            <h3 class="tittle">Giriş Yap</h3>
             <div class="row inner-sec">
                 <div class="login p-5 bg-light mx-auto mw-100">
                     <form asp-action="Index" asp-controller="Login" method="post">
@@ -24,11 +24,21 @@
 
                         </div>
                         @*<div class="form-check mb-2">
-                            <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                            <label class="form-check-label" for="exampleCheck1">Check me out</label>
+                        <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                        <label class="form-check-label" for="exampleCheck1">Check me out</label>
                         </div>*@
                         <button type="submit" class="btn btn-primary submit mb-4">Giriş Yap</button>
                         <p><a asp-action="Index" asp-controller="Register">Bir hesabınız yok mu ?</a></p>
+                        <div class="userinfo">
+                            <h5><u>Hazır Girişler</u></h5>
+                            <h5>Superadmin</h5>
+                            <h5>Eposta: superadmin@gmail.com</h5>
+                            <h5>Sifre: superadmin</h5>
+                            <h5>---------</h5>
+                            <h5>Admin</h5>
+                            <h5>Eposta: admin@gmail.com</h5>
+                            <h5>Sifre: admin1</h5>
+                        </div>
                     </form>
                 </div>
             </div>

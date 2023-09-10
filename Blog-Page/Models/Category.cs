@@ -1,12 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
 
 namespace BlogNET.Models
 {
     public partial class Category
     {
-        [Key]
         public int Id { get; set; }
         public string Name { get; set; }
-        //public int AuthorId { get; set; }
     }
 }

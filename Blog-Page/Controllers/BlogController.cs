@@ -190,6 +190,10 @@ namespace BlogNET.Controllers
             return Json(true);
         }
 
+        public IActionResult Content()
+        {
+            return View();
+        }
 
 
     }

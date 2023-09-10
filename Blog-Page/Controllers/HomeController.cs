@@ -1,4 +1,5 @@
 ﻿using BlogNET.Models;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -7,19 +8,33 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
+
 namespace BlogNET.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly BlogDbContext _context;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(BlogDbContext context, ILogger<HomeController> logger)
         {
             _logger = logger;
+            _context = context;
         }
 
         public IActionResult Index()
         {
+            return View();
+        }
+
+
+        [HttpPost]
+        public IActionResult Newsletter(Newsletter newsletter)
+        {
+            _context.Newsletter.Add(newsletter);
+            _context.SaveChanges();
+            
+
             return View();
         }
 

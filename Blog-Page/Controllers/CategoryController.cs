@@ -70,7 +70,7 @@ namespace BlogNET.Controllers
             var count = _context.Category.FromSqlRaw(sql, new SqlParameter("@Name", category.Name)).ToList();
 
 
-
+            // Category ismi aynından var mı kontrol eder.
             if (count.Count() == 0) // yoksa aramak icin
             {
                 var sql2 = "INSERT INTO Category (Name) VALUES (@Name)";
