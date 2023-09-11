@@ -50,7 +50,7 @@ namespace BlogNET.Migrations
                     AuthorId = table.Column<int>(nullable: false),
                     CategoryId = table.Column<int>(nullable: false),
                     CreateTime = table.Column<DateTime>(nullable: false, defaultValueSql: "('0001-01-01T00:00:00.0000000')"),
-                    CategoryName = table.Column<string>(nullable: true)
+                    //CategoryName = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {

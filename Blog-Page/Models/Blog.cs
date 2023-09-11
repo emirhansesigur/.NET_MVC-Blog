@@ -18,7 +18,7 @@ namespace BlogNET.Models
         public int AuthorId { get; set; }
         public int CategoryId { get; set; }
         public DateTime CreateTime { get; set; } = DateTime.Now;
-        public string CategoryName { get; set; }
+        //public string CategoryName { get; set; }
         [Display(Name = "Yuklemek İstediginiz Fotografi Seciniz")]
         [NotMapped]
         public IFormFile CoverFoto { get; set; }

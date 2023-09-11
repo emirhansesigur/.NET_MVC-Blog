@@ -118,7 +118,7 @@ namespace BlogNET.Controllers
             }
 
             // Eğer nesne null değilse categoryName özelliğine erişme
-            model.CategoryName = foundCategory.Name;
+            //model.CategoryName = foundCategory.Name;
             //if (!ModelState.IsValid) burada return View(model) yapamadığımız için validation kısmında sorun yaşanıyor.
             //{
             //    return View(model);

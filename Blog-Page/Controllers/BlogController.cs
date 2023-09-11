@@ -75,11 +75,11 @@ namespace BlogNET.Controllers
             //if (blogs.Count() == 0 && categoryName != null) // kategoride bir blog yok
             if (blogs.Count == 0 && categoryName != "Kategori Bulunamadı")
             {
-                ViewBag.isFound = "Blog Paylaşımı Yok";
+                ViewBag.notFoundAlert = "Blog Paylaşımı Yok";
             }
             else
             {
-                ViewBag.isFound = "";
+                ViewBag.notFoundAlert = "";
             }
 
             return View(blogs);
