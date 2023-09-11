@@ -7,7 +7,7 @@
 
 <section class="main-content-w3layouts-agileits">
     <div class="container">
-        <h3 class="tittle">En Yeni Blog Paylaşımları</h3>
+        <h3 class="tittle">En Yeni Blog Paylaşımları<br />@ViewBag.PageTitle <br />@ViewBag.isFound</h3>
         <div class="inner-sec">
             <!--left-->
             <div class="left-blog-info-w3layouts-agileits text-left">
@@ -28,7 +28,7 @@
                                                 var author = _context.Author.FirstOrDefault(a => a.Id == @x.AuthorId);
                                                 if (author != null)
                                                 {
-                                                    <a asp-controller="admin" asp-action="@author.Id">
+                                                    <a asp-route-authorno="@x.AuthorId" asp-action="Index" asp-controller="Blog">
                                                         <i class="fas fa-user"></i>@author.Name
                                                     </a>
                                                 }

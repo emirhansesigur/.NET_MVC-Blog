@@ -24,14 +24,63 @@ namespace BlogNET.Controllers
         }
 
 
-        public IActionResult Index()
+        public IActionResult Index(int cno, int authorno)
         {
-            //var categories = _context.Category.ToList();
-            //ViewBag.categories = categories;
+            List<Blog> blogs;
 
-            var blogs = _context.Blog
+            //ViewBag.BlogNotFound = false;
+
+
+            var categoryName = _context.Category
+            .Where(a => a.Id == cno)
+            .Select(a => a.Name)
+            .FirstOrDefault() ?? "Kategori Bulunamadı";
+            
+            var authorName = _context.Author
+            .Where(a => a.Id == authorno)
+            .Select(a => a.Name)
+            .FirstOrDefault() ?? "Yazar Bulunamadı";
+
+
+
+            if (cno != 0) // return View at, hangi view ise hata yer alsın.
+            {
+                ViewBag.PageTitle = categoryName;
+
+                blogs = _context.Blog
+                .Where(b => b.CategoryId == cno && b.IsPublish) // CategoryId sütunu ile cno'yu karşılaştır
+                .OrderByDescending(b => b.CreateTime)
+                .ToList();
+            }
+
+            else if (authorno != 0) // return View at, hangi view ise hata yer alsın.
+            {   
+                ViewBag.PageTitle = "Yazar: " + authorName;
+
+                blogs = _context.Blog
+                .Where(b => b.AuthorId == authorno && b.IsPublish) // CategoryId sütunu ile cno'yu karşılaştır
+                .OrderByDescending(b => b.CreateTime)
+                .ToList();
+            }
+            else
+            {
+                ViewBag.PageTitle = "Tüm Bloglar";
+
+                blogs = _context.Blog
+                    .Where(b => b.IsPublish == true)
                     .OrderByDescending(b => b.CreateTime)
                     .ToList();
+            }
+
+            //if (blogs.Count() == 0 && categoryName != null) // kategoride bir blog yok
+            if (blogs.Count == 0 && categoryName != "Kategori Bulunamadı")
+            {
+                ViewBag.isFound = "Blog Paylaşımı Yok";
+            }
+            else
+            {
+                ViewBag.isFound = "";
+            }
 
             return View(blogs);
         }
@@ -104,15 +153,16 @@ namespace BlogNET.Controllers
             }
 
             // Category ismini de elde etmemiz gerekiyor.
-            var foundCategory = _context.Category.Find(model.CategoryId);
+            // burayı kapattım.
+            //var foundCategory = _context.Category.Find(model.CategoryId);
 
-            if (foundCategory == null)
-            {
-                return Json(false); // false yerine baska bir sey dondurerek uyarı verdir.
-            }
+            //if (foundCategory == null)
+            //{
+            //    return Json(false); // false yerine baska bir sey dondurerek uyarı verdir.
+            //}
 
             // Eğer nesne null değilse categoryName özelliğine erişme
-            model.CategoryName = foundCategory.Name;
+            //model.CategoryName = foundCategory.Name;
             //if (!ModelState.IsValid) burada return View(model) yapamadığımız için validation kısmında sorun yaşanıyor.
             //{
             //    return View(model);
@@ -166,7 +216,7 @@ namespace BlogNET.Controllers
 
             // Blog bulunduğunda doğrudan silme işlemini gerçekleştiririz.
             _context.Blog.Remove(blogToDelete);
-            
+
 
             // Değişiklikleri veritabanına kaydedin
             await _context.SaveChangesAsync();

@@ -1,8 +1,12 @@
 ﻿@using Microsoft.AspNetCore.Http;
+@inject BlogDbContext _context
 
 @{
     int? id = Context.Session.GetInt32("Id");
     string superAdmin = Context.Session.GetString("superAdmin");
+    // sorgu at
+    //var author = _context.Author.FirstOrDefault(a => a.Id == @x.AuthorId);
+    var categories = _context.Category.ToList();
 }
 
 
@@ -24,9 +28,18 @@
                 <li class="nav-item">
                     <a class="nav-link" href="#">Yazarlar</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Kategoriler</a>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="kategoriDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Karegoriler
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="kategoriDropdown">
+                        @foreach (var category in categories)
+                        {
+                            <a class="dropdown-item" asp-route-cno="@category.Id" asp-action="Index" asp-controller="Blog">@category.Name</a>
+                        }
+                    </div>
                 </li>
+
                 @if (id.HasValue)
                 {
                     <li class="nav-item">
