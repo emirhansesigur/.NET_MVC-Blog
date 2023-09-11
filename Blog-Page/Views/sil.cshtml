@@ -31,9 +31,7 @@
 
     <br />
     <div class="btn-group-toggle">
-        @*<button type="button" class="btn btn-primary" id="SaveBtn" onclick="SaveBtn()">Kaydet</button>*@
-        <button type="button" class="btn btn-primary" id="SaveBtn">Kaydet</button>
-
+        <button class="btn btn-primary" id="SaveBtn" onclick="SaveBtn()" type="button">Kaydet</button>
     </div>
 
 </form>
@@ -60,52 +58,35 @@
         });
 
 
+        function SaveBtn() {
 
-        $(document).ready(function () {
-            $('#SaveBtn').click(function () {
-                // Subtitle Summernote file CategoryId
-                var title = document.getElementById("Title").value;
-                var subtitle = document.getElementById("Subtitle").value;
-                var summernote = document.getElementById("Summernote").value;
-                var categoryId = document.getElementById("CategoryId").value;
-                var coverFotoInput = $("#CoverFoto")[0].files[0];
+            // Subtitle Summernote file CategoryId
+            var title = document.getElementById("Title").value;
+            var subtitle = document.getElementById("Subtitle").value;
+            var summernote = document.getElementById("Summernote").value;
+            var categoryId = document.getElementById("CategoryId").value;
 
-                // FormData nesnesi oluşturun ve verileri ekleyin
-                var formData = new FormData();
-                formData.append("Title", title);
-                formData.append("Subtitle", subtitle);
-                formData.append("Content", summernote);
-                formData.append("CategoryId", categoryId);
-                formData.append("CoverFoto", coverFotoInput);
-
-                if (title == "" || subtitle == "" || summernote == "" || categoryId == 0) {
-                    swal.fire({
-                        icon: 'error',
-                        title: 'Hata!',
-                        text: 'Tüma alanları doldurunuz.',
-                        confirmButtonText: 'Tamam'
-                    });
-                }
-                else if (!coverFotoInput) {
-                    swal.fire({
-                        icon: 'error',
-                        title: 'Hata!',
-                        text: 'Fotoğraf Ekleyiniz.',
-                        confirmButtonText: 'Tamam'
-                    });
-
-                } else { // post işlem gerçekleşmesin
+            if (title == "") {
+                swal.fire({
+                    icon: 'error',
+                    title: 'Hata!',
+                    text: 'Lütfen isim alanları doldurunuz.',
+                    confirmButtonText: 'Tamam'
+                } else { // post işlem gerceklesmesin
                     $.ajax({
                         type: "POST",
                         dataType: 'json',
-                        contentType: false,
-                        processData: false,
                         url: "@Url.Action("Add", "Blog")",
                         cache: false,
-                        data: formData,
+                        data: {
+                            Title: title,
+                            Subtitle: subtitle,
+                            Summernote: Summernote,
+                            CategoryId: categoryId
+                        },
                         success: function (data) {
                             if (data) {  // data true dönen bir şey
-                                Swal.fire('Kayıt işlemi başarılı')
+                                Swal.fire('Kayıt islemi basarili')
                                     .then(function () {
                                         location.reload();
                                     });
@@ -116,13 +97,15 @@
                                     title: 'Hata!',
                                     text: 'Blog kayıtta bir sorun oluştu',
                                     confirmButtonText: 'Tamam'
-                                })
+                                }).then(function () {
+                                    $('#CategoryModal').modal('show');
+                                });
                             }
                         }
                     });
                 }
-            });
-        });
+                        }
+
 
     </script>
 }

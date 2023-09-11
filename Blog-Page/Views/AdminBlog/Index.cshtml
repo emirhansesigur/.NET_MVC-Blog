@@ -44,10 +44,13 @@
                         {
                             <td>No author found</td>
                         }
+                        <a class="btn btn-light" href="Blog/Detials/@item.Id">Bu Bloğu Engelle</a>
                     }
                 }
                 <td>
-                    <a class="btn btn-light">İçeriği Görüntüle</a>
+                    <a class="btn btn-light" asp-action="Detials/@item.Id" asp-controller="Blog">Görüntüle</a>
+                    <a class="btn btn-light">Edit</a>
+
                     @if (item.IsPublish)
                     {
                         <a class="btn btn-success" asp-route-id="@item.Id" asp-action="Publish">Yayınlandı</a>

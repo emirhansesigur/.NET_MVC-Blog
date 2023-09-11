@@ -19,6 +19,7 @@
                                 @*<img src="@x.ImagePath" class="card-img-top img-fluid" alt="Blog Fotoğrafı">*@
                                 <img src="@x.ImagePath" class="card-img-top img-fluid" alt="Blog Fotoğrafı" style="max-width: 100%; height: auto;">
                             </a>
+                            
                             <div class="card-body">
                                 <ul class="blog-icons my-4">
                                     <li>
@@ -48,7 +49,10 @@
                                     </li>
                                 </ul>
                                 <h5 class="card-title">
-                                    <a href="/Blog/Details/@x.Id">@x.Title</a>
+                                    <a href="/Blog/Details/(@x.Id)">@x.Title</a>
+                                    @*<a href="/Blog/Details/@System.Web.HttpUtility.UrlPathEncode(x.Id)">@x.Title</a>*@
+
+
                                 </h5>
                                 @*<a href="/Blog/Details/@x.Id" class="btn btn-primary read-m">Okumak İçin Tıklayın</a>*@
                                 @*@if (x.Content != null)

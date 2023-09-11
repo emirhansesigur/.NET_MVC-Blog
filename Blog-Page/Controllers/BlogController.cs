@@ -152,17 +152,6 @@ namespace BlogNET.Controllers
                 return RedirectToAction("Forbidden", "Error");
             }
 
-            // Category ismini de elde etmemiz gerekiyor.
-            // burayı kapattım.
-            //var foundCategory = _context.Category.Find(model.CategoryId);
-
-            //if (foundCategory == null)
-            //{
-            //    return Json(false); // false yerine baska bir sey dondurerek uyarı verdir.
-            //}
-
-            // Eğer nesne null değilse categoryName özelliğine erişme
-            //model.CategoryName = foundCategory.Name;
             //if (!ModelState.IsValid) burada return View(model) yapamadığımız için validation kısmında sorun yaşanıyor.
             //{
             //    return View(model);
