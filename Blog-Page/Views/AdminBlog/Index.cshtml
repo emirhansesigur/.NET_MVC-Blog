@@ -44,11 +44,13 @@
                         {
                             <td>No author found</td>
                         }
-                        <a class="btn btn-light" href="Blog/Detials/@item.Id">Bu Bloğu Engelle</a>
+
                     }
                 }
                 <td>
-                    <a class="btn btn-light" asp-action="Detials/@item.Id" asp-controller="Blog">Görüntüle</a>
+                    
+
+                    <a class="btn btn-light" href="Blog/Details/@item.Id" target="_blank">Görüntüle</a>
                     <a class="btn btn-light">Edit</a>
 
                     @if (item.IsPublish)
@@ -58,7 +60,21 @@
                     }
                     else
                     {
-                        <a class="btn btn-light" asp-route-id="@item.Id" asp-action="Publish">Yayınla</a>
+                        <a class="btn btn-primary" asp-route-id="@item.Id" asp-action="Publish">Yayınla</a>
+                    }
+                    @{
+                        if (superAdmin == "superAdmin")
+                        {
+                            if (item.IsBlocked)
+                            {
+                                <a class="btn btn-primary" asp-route-id="@item.Id" asp-action="BlockFun">Engeli Kaldır</a>
+                            }
+                            else
+                            {
+                                <a class="btn btn-danger" asp-route-id="@item.Id" asp-action="BlockFun">Bloğu Engelle</a>
+                            }
+
+                        }
                     }
                     <a class="btn btn-danger" onclick="$('#ConfirmModal').modal('show'); deleteForm(@item.Id);">Bloğu Sil</a>
 

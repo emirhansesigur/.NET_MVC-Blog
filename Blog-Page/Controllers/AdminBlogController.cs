@@ -76,6 +76,24 @@ namespace BlogNET.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+
+        //[Authorize(Roles = "SuperAdmin")]
+        public IActionResult BlockFun(int Id) // yayinlama islemini tersine cevirir.
+        {
+            if (HttpContext.Session.GetString("superAdmin") != "superAdmin")
+            {
+                //var list = _context.Blog.ToList();    
+                return RedirectToAction("Forbidden", "Error");
+            }
+
+            var blog = _context.Blog.Find(Id);
+
+            blog.IsBlocked = !(blog.IsBlocked); // istek gelince tersine cevir
+            _context.Update(blog);
+            _context.SaveChanges();
+            return RedirectToAction(nameof(Index));
+        }
+
         //[Authorize(Roles = "Admin")]
         public IActionResult Add() // Categories'e gonderiliyor.
         {

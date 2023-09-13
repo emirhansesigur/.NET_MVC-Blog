@@ -48,7 +48,7 @@ namespace BlogNET.Controllers
                 ViewBag.PageTitle = categoryName;
 
                 blogs = _context.Blog
-                .Where(b => b.CategoryId == cno && b.IsPublish) // CategoryId sütunu ile cno'yu karşılaştır
+                .Where(b => b.CategoryId == cno && b.IsPublish && !(b.IsBlocked)) // CategoryId sütunu ile cno'yu karşılaştır
                 .OrderByDescending(b => b.CreateTime)
                 .ToList();
             }
@@ -58,7 +58,7 @@ namespace BlogNET.Controllers
                 ViewBag.PageTitle = "Yazar: " + authorName;
 
                 blogs = _context.Blog
-                .Where(b => b.AuthorId == authorno && b.IsPublish) // CategoryId sütunu ile cno'yu karşılaştır
+                .Where(b => b.AuthorId == authorno && b.IsPublish && !(b.IsBlocked)) // CategoryId sütunu ile cno'yu karşılaştır
                 .OrderByDescending(b => b.CreateTime)
                 .ToList();
             }
@@ -67,7 +67,7 @@ namespace BlogNET.Controllers
                 ViewBag.PageTitle = "Tüm Bloglar";
 
                 blogs = _context.Blog
-                    .Where(b => b.IsPublish == true)
+                    .Where(b => b.IsPublish == true && !(b.IsBlocked))
                     .OrderByDescending(b => b.CreateTime)
                     .ToList();
             }
@@ -115,6 +115,8 @@ namespace BlogNET.Controllers
             _context.SaveChanges();
             return RedirectToAction(nameof(Index));
         }
+        
+
 
 
 
@@ -161,6 +163,7 @@ namespace BlogNET.Controllers
             {
                 // category name ekleme
                 model.IsPublish = false;
+                model.IsBlocked = false;
 
                 string ContentRootPath = _webHostEnvironment.ContentRootPath;
 

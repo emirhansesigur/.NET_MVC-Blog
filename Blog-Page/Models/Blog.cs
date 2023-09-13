@@ -15,6 +15,7 @@ namespace BlogNET.Models
         public string Content { get; set; }
         public string ImagePath { get; set; }
         public bool IsPublish { get; set; }
+        public bool IsBlocked { get; set; }
         public int AuthorId { get; set; }
         public int CategoryId { get; set; }
         public DateTime CreateTime { get; set; } = DateTime.Now;
