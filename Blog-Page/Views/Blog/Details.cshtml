@@ -22,6 +22,12 @@
                         <div class="blog-info-middle">
                             <ul>
                                 <li>
+
+                                    <a asp-route-authorno="@Model.AuthorId" asp-action="Index" asp-controller="Blog">
+                                        <i class="fas fa-user"></i> ...--...
+                                    </a>
+                                </li>
+                                <li>
                                     <a href="#">
                                         <i class="far fa-calendar-alt"></i> @Model.CreateTime.ToShortDateString()
                                     </a>

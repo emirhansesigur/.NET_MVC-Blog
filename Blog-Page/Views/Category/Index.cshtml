@@ -153,7 +153,7 @@
                 cache: false,
                 data: { Name: name },
                 success: function (data) {
-                    if (data) {  // data true dönen bir şey
+                    if (data == "1") {  // data true dönen bir şey
                         Swal.fire('Category ekleme islemi basarili')
                             .then(function () {
                                 location.reload();

@@ -50,7 +50,7 @@ namespace BlogNET.Models
 
             modelBuilder.Entity<Category>(entity =>
             {
-                entity.HasNoKey();
+                //entity.HasNoKey();
 
                 entity.Property(e => e.Id).ValueGeneratedOnAdd();
 

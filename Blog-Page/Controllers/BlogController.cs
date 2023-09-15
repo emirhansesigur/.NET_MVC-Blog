@@ -87,7 +87,7 @@ namespace BlogNET.Controllers
 
         public IActionResult Details(int Id) // parametre olarak alma.
         {
-            var categoryNames = _context.Category.Select(c => c.Name).ToList();
+            //var categoryNames = _context.Category.Select(c => c.Name).ToList();
             //ViewBag.categoryNames = categoryNames.GetRange(0, 3);
 
             var blog = _context.Blog.Find(Id);

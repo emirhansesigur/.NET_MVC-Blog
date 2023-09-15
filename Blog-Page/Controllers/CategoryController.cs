@@ -69,16 +69,22 @@ namespace BlogNET.Controllers
             var sql = "SELECT * FROM Category WHERE Name = @Name";
             var count = _context.Category.FromSqlRaw(sql, new SqlParameter("@Name", category.Name)).ToList();
 
+            
+            var lowercaseCategoryName = category.Name.ToLower();
+
+            var foundC = _context.Category
+                .FirstOrDefault(c => c.Name.ToLower() == lowercaseCategoryName);
+
 
             // Category ismi aynından var mı kontrol eder.
             if (count.Count() == 0) // yoksa aramak icin
             {
-                var sql2 = "INSERT INTO Category (Name) VALUES (@Name)";
-                var affectedRows = await _context.Database.ExecuteSqlRawAsync(sql2, new SqlParameter("@Name", category.Name));
+                _context.Category.Add(category);
+                await _context.SaveChangesAsync();    
             }
             // varsa ekrana hata dondur.
 
-            return Json(true);
+            return Json("1");
         }
 
 
