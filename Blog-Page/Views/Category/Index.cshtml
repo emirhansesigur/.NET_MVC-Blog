@@ -21,8 +21,8 @@
                 <th scope="row">@item.Id</th>
                 <td>@item.Name</td>
                 <td>
-                    <a class="btn btn-danger" asp-route-id="@item.Id" asp-controller="Category" asp-action="DeleteCategory">Sil</a> @* TAG HELPER *@
                     <button class="btn btn-secondary" onclick="updateForm(@item.Id)" type="button">Güncelle</button>
+                    <a class="btn btn-danger" onclick="$('#ConfirmModal').modal('show'); deleteForm(@item.Id);">Sil</a> @* TAG HELPER *@
                 </td>
             </tr>
         }
@@ -57,7 +57,25 @@
 </div>
 
 
-
+<div class="modal" id="ConfirmModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Silmeye Emin Misin?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Tıklamış olduğunuz Kategoriyi silinecek onaylıyor musunuz?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="deleteBtn" data-dismiss="modal">Silmeyi Onayla</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 @section Scripts{
@@ -153,33 +171,62 @@
                 cache: false,
                 data: { Name: name },
                 success: function (data) {
-                    if (data == "1") {  // data true dönen bir şey
-                        Swal.fire('Category ekleme islemi basarili')
+                    if (data.result === "success") {  // data true dönen bir şey
+                        Swal.fire('Kategori ekleme islemi basarili')
                             .then(function () {
                                 location.reload();
                             });
                     }
-                    else {
+                    else if(data.result === "same"){
+                        Swal.fire('Aynı kategori ismi kaydedilemez.')
+                            .then(function () {
+                                location.reload();
+                            });
+                    }
+                    else if (data.result === "error") {
                         swal.fire({
                             icon: 'error',
                             title: 'Hata!',
-                            text: 'Aynı Category İsminden giris yaptiniz.',
+                            text: 'Hata oluştu',
                             confirmButtonText: 'Tamam'
                         }).then(function () {
                             $('#CategoryModal').modal('show');
                         });
                     }
-                }//,
-                //error: function (xhr, status, error) {
-                //    // AJAX isteği başarısız oldu.
-                //    //console.log("Hata! Durum kodu:", xhr.status);
-                //    //console.log("Hata mesajı:", error);
-                //    Swal.fire({
-                //        icon: 'error',
-                //        title: 'Oops...',
-                //        text: 'Something went wrong!'
-                //    })
-                //}
+                    else{
+                        swal.fire({
+                            icon: 'error',
+                            title: 'Hata!',
+                            text: 'Hata oluştu',
+                            confirmButtonText: 'Tamam'
+                        })
+                    }
+                }
+                
+            });
+        }
+
+        function deleteForm(Id) {
+            $('#deleteBtn').click(function () {
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("DeleteCategory", "Category")", // Silme işlemini gerçekleştiren Action metodunun URL'si
+                    data: { id: Id }, // Silinecek kategorinin Id'sini gönderiyoruz
+
+                    success: function (result) {
+                        if (result) {
+                            Swal.fire(Id + " Numaralı Kategori Silme İşlemi Başarılı.")
+                                .then(function () {
+                                    location.reload();
+                                });
+                        } else {
+                            alert("Silme işlemi başarısız oldu: " + result.message);
+                        }
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        alert("AJAX isteği başarısız oldu: " + errorThrown);
+                    }
+                });
             });
         }
 

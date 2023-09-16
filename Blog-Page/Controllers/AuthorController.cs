@@ -140,7 +140,7 @@ namespace BlogNET.Controllers
 
 
         //[Authorize(Roles = "SuperAdmin")]
-        public async Task<IActionResult> DeleteAuthor(int? Id)
+        public async Task<IActionResult> DeleteAuthor(int Id)
         {
             if (HttpContext.Session.GetString("superAdmin") != "superAdmin")
             {
@@ -148,8 +148,13 @@ namespace BlogNET.Controllers
                 return RedirectToAction("Forbidden", "Error");
             }
 
-            var sql = "DELETE FROM Author WHERE Id = @Id";
-            await _context.Database.ExecuteSqlRawAsync(sql, new SqlParameter("@Id", Id));
+            var categoryToDelete = _context.Category.FirstOrDefault(c => c.Id == Id);
+
+            if (categoryToDelete != null)
+            {
+                _context.Category.Remove(categoryToDelete);
+                await _context.SaveChangesAsync();
+            }
 
             return RedirectToAction(nameof(Index));
         }

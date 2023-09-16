@@ -22,14 +22,14 @@ namespace BlogNET.Controllers
             _context = context;
             _webHostEnvironment = webHostEnvironment;
         }
-
+        
 
         public IActionResult Index(int cno, int authorno)
         {
             List<Blog> blogs;
 
             //ViewBag.BlogNotFound = false;
-
+                
 
             var categoryName = _context.Category
             .Where(a => a.Id == cno)
@@ -197,6 +197,10 @@ namespace BlogNET.Controllers
             {
                 return RedirectToAction("Forbidden", "Error");
             }
+            // YAPILACAK: Herkesin kendi blogunu silmesi icin kontol et.
+            // YAPILACAK: Guncellemede de yap
+
+
 
             var blogToDelete = await _context.Blog.FindAsync(id2);
 

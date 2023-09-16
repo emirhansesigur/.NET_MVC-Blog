@@ -28,14 +28,6 @@ namespace BlogNET.Controllers
         {
             //var id = HttpContext.Session.GetInt32("Id");
             var superadmin = HttpContext.Session.GetString("superAdmin");
-            //if (id.HasValue)
-            //{
-            //    var categories = _context.Category
-            //            .Where(category => category.AuthorId == id)
-            //            .ToList();
-            //    return View(categories);
-            //}
-            //else 
             if (superadmin == "superAdmin")
             {
                 // eger superadmin giris yaptiysa hepsini dondur
@@ -59,17 +51,11 @@ namespace BlogNET.Controllers
             //    return RedirectToAction(nameof(Index));
             //}
 
+            if (HttpContext.Session.GetString("superAdmin") != "superAdmin")
+            {
+                return RedirectToAction("Forbidden", "Error");
+            }
 
-            //var AuthorId = (int)HttpContext.Session.GetInt32("Id");
-            //string authorName = _context.Author
-            //            .Where(author => author.Id == AuthorId)
-            //            .Select(author => author.Name)
-            //            .FirstOrDefault();
-
-            var sql = "SELECT * FROM Category WHERE Name = @Name";
-            var count = _context.Category.FromSqlRaw(sql, new SqlParameter("@Name", category.Name)).ToList();
-
-            
             var lowercaseCategoryName = category.Name.ToLower();
 
             var foundC = _context.Category
@@ -77,14 +63,15 @@ namespace BlogNET.Controllers
 
 
             // Category ismi aynından var mı kontrol eder.
-            if (count.Count() == 0) // yoksa aramak icin
+            if (foundC != null) // yoksa aramak icin
             {
-                _context.Category.Add(category);
-                await _context.SaveChangesAsync();    
+                return Json(new { result = "same" });
             }
             // varsa ekrana hata dondur.
 
-            return Json("1");
+            _context.Category.Add(category);
+            await _context.SaveChangesAsync();
+            return Json(new { result = "success" });
         }
 
 
@@ -97,8 +84,13 @@ namespace BlogNET.Controllers
 
         //<a class="btn btn-danger" asp-route-id="@item.Id" asp-action="DeleteCategory">Sil</a>
         //[Authorize(Roles = "SuperAdmin")]
-        public async Task<IActionResult> DeleteCategory(int? Id)
+        public async Task<IActionResult> DeleteCategory(int Id)
         {
+            if (HttpContext.Session.GetString("superAdmin") != "superAdmin")
+            {
+                return RedirectToAction("Forbidden", "Error");
+            }
+
             var sql = "DELETE FROM Category WHERE Id = @Id";
             await _context.Database.ExecuteSqlRawAsync(sql, new SqlParameter("@Id", Id));
 
@@ -111,6 +103,11 @@ namespace BlogNET.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateCategory(int Id, string Name) // burada kaldık
         {
+            if (HttpContext.Session.GetString("superAdmin") != "superAdmin")
+            {
+                return RedirectToAction("Forbidden", "Error");
+            }
+
             // eski kayıtlarla ile aynıysa güncelleME !!
 
             //var sql = "SELECT * FROM Category WHERE Name = @Name";
