@@ -59,7 +59,7 @@ namespace BlogNET.Models
 
             modelBuilder.Entity<Newsletter>(entity =>
             {
-                entity.HasNoKey();
+                //entity.HasNoKey();
 
                 entity.Property(e => e.Email).IsRequired();
 

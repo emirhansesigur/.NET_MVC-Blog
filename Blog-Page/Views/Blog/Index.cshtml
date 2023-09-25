@@ -44,12 +44,26 @@
                                             <i class="far fa-comment"></i> 21
                                         </a>
                                     </li>
-                                    <li>
-                                        <i class="fas fa-eye"></i> 2000
-                                    </li>
+                                    @{
+                                        var categoryName = _context.Category
+                                        .Where(c => c.Id == x.CategoryId)
+                                        .Select(c => c.Name)
+                                        .FirstOrDefault();
+
+                                        <li class="mx-2">
+                                            <a href="#">
+                                                <i class="fas fa-folder"></i> @categoryName
+                                            </a>
+                                        </li>
+                                    }
+                                    
+                                    
+                                    @*<li> 
+                                        <i class="fas fa-eye"></i> 2000 (görüntülenme sayısı)
+                                    </li>*@
                                 </ul>
                                 <h5 class="card-title">
-                                    <a href="/Blog/Details/(@x.Id)">@x.Title</a>
+                                    <a href="/Blog/Details/@x.Id">@x.Title</a>
                                     @*<a href="/Blog/Details/@System.Web.HttpUtility.UrlPathEncode(x.Id)">@x.Title</a>*@
 
 

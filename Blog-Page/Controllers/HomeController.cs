@@ -28,16 +28,7 @@ namespace BlogNET.Controllers
         }
 
 
-        [HttpPost]
-        public IActionResult Newsletter(Newsletter newsletter)
-        {
-            _context.Newsletter.Add(newsletter);
-            _context.SaveChanges();
-            
-
-            return View();
-        }
-
+        
         public IActionResult Privacy()
         {
             return View();

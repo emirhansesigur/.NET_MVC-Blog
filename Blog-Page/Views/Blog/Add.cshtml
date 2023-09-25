@@ -31,7 +31,6 @@
 
     <br />
     <div class="btn-group-toggle">
-        @*<button type="button" class="btn btn-primary" id="SaveBtn" onclick="SaveBtn()">Kaydet</button>*@
         <button type="button" class="btn btn-primary" id="SaveBtn">Kaydet</button>
 
     </div>
@@ -98,8 +97,6 @@
                     $.ajax({
                         type: "POST",
                         dataType: 'json',
-                        contentType: false,
-                        processData: false,
                         url: "@Url.Action("Add", "Blog")",
                         cache: false,
                         data: formData,

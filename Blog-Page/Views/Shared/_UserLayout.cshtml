@@ -57,10 +57,11 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 
     
     @RenderBody();
-    @RenderSection("Scripts", required: false); @*Session i renden edebilmesi icin*@
     <!--//main-->
     <!--footer-->
     @await Html.PartialAsync("FooterPartial")
+
+    @RenderSection("Scripts", required: false) @*Session i renden edebilmesi icin*@
     <!---->
     <!-- js -->
     <!-- //js -->
