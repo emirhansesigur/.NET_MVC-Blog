@@ -48,10 +48,12 @@
                                         var categoryName = _context.Category
                                         .Where(c => c.Id == x.CategoryId)
                                         .Select(c => c.Name)
-                                        .FirstOrDefault();
+                                        .FirstOrDefault() ?? "isim bulunamadı";
+                                        
+
 
                                         <li class="mx-2">
-                                            <a href="#">
+                                            <a asp-action="Index" asp-controller="Blog" asp-route-cno="@x.CategoryId">
                                                 <i class="fas fa-folder"></i> @categoryName
                                             </a>
                                         </li>

@@ -97,6 +97,8 @@
                     $.ajax({
                         type: "POST",
                         dataType: 'json',
+                        contentType: false,
+                        processData: false,
                         url: "@Url.Action("Add", "Blog")",
                         cache: false,
                         data: formData,
