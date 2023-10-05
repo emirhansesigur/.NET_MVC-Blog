@@ -148,11 +148,11 @@ namespace BlogNET.Controllers
                 return RedirectToAction("Forbidden", "Error");
             }
 
-            var categoryToDelete = _context.Category.FirstOrDefault(c => c.Id == Id);
+            var authorToDelete = _context.Author.FirstOrDefault(c => c.Id == Id);
 
-            if (categoryToDelete != null)
+            if (authorToDelete != null)
             {
-                _context.Category.Remove(categoryToDelete);
+                _context.Author.Remove(authorToDelete);
                 await _context.SaveChangesAsync();
             }
 
